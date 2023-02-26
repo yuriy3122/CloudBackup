@@ -1,0 +1,61 @@
+<dx-popup
+           class="wizard" 
+          [(visible)]="visible"
+          [title]="title"
+          [dragEnabled]="false"
+          [showCloseButton]="true"
+          (onShowing)="onShowing()"
+          (onShown)="onShown()"
+          (onHidden)="onHidden()"
+          [(width)]="width"
+          [(height)]="height"
+         [copyRootClassesToWrapper]="true">
+  <div *dxTemplate="let t = data of 'content'">
+    <div class="wizard-wrapper popup">
+      <div class="wizard-wrapper-title">
+        <span class="wizard-wrapper-description">{{currentStep?.description}}</span>
+        <span class="wizard-wrapper-sub-description">{{currentStep?.subDescription}}</span>
+      </div>
+      <table class="wizard-table">
+        <tr>
+          <td class="first-column">
+            <ul class="wizard-wrapper-menu">
+              <li *ngFor="let step of steps; let i = index;" (click)="setStepIndex(i)" [ngClass]="{'active': i === stepIndex}">
+                <span class="menu-text">{{step.header}}</span>
+              </li>
+            </ul>
+          </td>
+          <td class="second-column">
+            <ng-content></ng-content>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <dxi-toolbar-item toolbar="bottom"
+                    location="after"
+                    [visible]="canMoveBack">
+    <div class="button secondary back" (click)="prevStep()">
+      <span>Back</span>
+    </div>
+  </dxi-toolbar-item>
+  <dxi-toolbar-item toolbar="bottom"
+                    location="after"
+                    [visible]="canMoveNext">
+    <div class="button secondary next margin-left10" (click)="nextStep()">
+      <span>Next</span>
+    </div>
+  </dxi-toolbar-item>
+  <dxi-toolbar-item toolbar="bottom"
+                    location="after">
+    <div class="button primary finish margin-left10" (click)="complete()">
+      <span>{{finishButtonText}}</span>
+    </div>
+  </dxi-toolbar-item>
+  <dxi-toolbar-item toolbar="bottom"
+                    location="after">
+    <div class="button secondary margin-left10" (click)="hide()">
+      <span>Cancel</span>
+    </div>
+  </dxi-toolbar-item>
+</dx-popup>

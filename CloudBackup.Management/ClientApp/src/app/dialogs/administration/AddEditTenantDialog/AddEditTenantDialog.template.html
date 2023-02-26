@@ -1,0 +1,53 @@
+<dx-popup id="AddEditTenantPopup" [visible]="popupVisible" width="600" height="'auto'" [title]="title"
+    (onShowing)="onShow()" (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="dialog" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+      <div class="popup wizard-step-content">
+        <table class="simple-table width100">
+          <tr>
+            <td class="width20">
+              Name:
+            </td>
+            <td class="width80">
+              <dx-text-box [(value)]="tenant.Name"
+                           [isValid]="nameErrorMessage === ''"
+                           [validationError]="{ message: nameErrorMessage}"
+                           (onValueChanged)="onNameChanged()">
+              </dx-text-box>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Isolated:
+            </td>
+            <td>
+              <dx-check-box [(value)]="isTenantIsolated"
+                            hint="Isolated tenants are completely separate tenants. Administrators do not have access to the data of isolated tenants: they can only manage their users.">
+              </dx-check-box>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              Description:
+              <br />
+              <dx-text-area [(value)]="tenant.Description"></dx-text-area>
+            </td>
+          </tr>
+        </table>
+        <span class="red-text" *ngIf="errorMessage !== ''">{{errorMessage}}</span>
+      </div>
+    </div>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+        elementAttr:gridsettings.finishclass,
+        onClick: save,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+        elementAttr:gridsettings.cancelclass,
+        onClick: hide,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

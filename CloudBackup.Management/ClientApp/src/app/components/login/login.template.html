@@ -1,0 +1,44 @@
+﻿<div class="login-table" *ngIf="registered">
+        <div class="login-header center">
+            <h4>LOGIN</h4>
+        </div>
+        <div class="login-frame" (keypress)="onKeyPressed($event)">
+            <table class="simple-table">
+                <tr>
+                    <td class="first-column"><span class="secondary-text">User name: </span></td>
+                    <td class="second-column">
+                        <dx-text-box [(value)]="login"
+                                     valueChangeEvent="change input"
+                                     [disabled]="showSpinner"
+                                     [isValid]="!loginErrorMessage" 
+                                     [validationError]="{ message: loginErrorMessage }">
+                        </dx-text-box>
+                    </td>
+                </tr>
+                <!--<tr>
+                    <td style="padding-top: 0; padding-bottom: 0;"></td>
+                    <td style="padding-top: 0; padding-bottom: 0;"><small>Example: Tenant\User</small></td>
+                </tr>-->
+                <tr>
+                    <td><span class="secondary-text">Password: </span></td>
+                    <td>
+                        <dx-text-box mode="password" 
+                                     [(value)]="password"
+                                     valueChangeEvent="change input"
+                                     [disabled]="showSpinner"
+                                     [isValid]="!passwordErrorMessage" 
+                                     [validationError]="{ message: passwordErrorMessage }">
+                        </dx-text-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><dx-check-box [disabled]="showSpinner" [(value)]="remember" [text]="rememberMeText"></dx-check-box></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><dx-button [disabled]="showSpinner" class="primary no-background" (onClick)="loginEnd()" [text]="buttonLoginText"></dx-button></td>
+                </tr>
+            </table>
+        </div>
+</div>

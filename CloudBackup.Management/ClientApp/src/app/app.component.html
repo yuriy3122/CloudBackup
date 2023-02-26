@@ -1,0 +1,66 @@
+<div class="container-fluid main-page">
+  <div [ngClass]="{'center': !authorized}" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">
+          <span class="logo-image"><b>Cloud</b> Backup</span>
+        </a>
+      </div>
+      <div class="navbar-right" *ngIf="authorized">
+        <span class="navbar-logout" (click)="logout()">
+          {{currentUser.login}}
+        </span>
+        <alerts></alerts>
+        <a class="navbar-help" target="_blank" rel="noopener noreferrer" href="#"></a>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="upper-menu row"    [ngClass]="authorized?(menuCollapsed? 'menucollapsed' : ''):'hide'">
+    <div class="upper-menu-left col-menu col" >
+      <div class="burger-button" (click)="menuCollapsed=!menuCollapsed"></div>
+    </div>
+    <div class="upper-menu-right col-main col">
+      <span class="breadcrumbs">
+        <a [routerLink]="activeRouteParent?.path">
+          <span>{{activeRouteParent?.data?.title}}</span>
+        </a>
+        <span> > </span>
+        <span *ngFor="let route of breadcrumbs; let i = index;">
+          <a *ngIf="i < breadcrumbs.length-1" [routerLink]="route.CompiledLink"><span>{{route.Name}} </span></a>
+          <span *ngIf="i < breadcrumbs.length-1"> > </span>
+          <span *ngIf="i == breadcrumbs.length-1"> {{route.Name}}</span>
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <div class="row main-block" [ngClass]="menuCollapsed? 'menucollapsed' : ''">
+    <!-- Left menu -->
+    <!-- *ngIf="authorized" -->
+    <div *ngIf="authorized" class="col col-menu">
+      <main-menu></main-menu>
+    </div>
+    <div class="col col-main">
+      <div class="main" >
+        <secondary-menu *ngIf="authorized"></secondary-menu>
+
+        <div class="body-content" >
+          <div class="panel with-nav-tabs panel-default">
+            <div class="panel-body">
+              <div class="tab-content">
+                <div id="default">
+                  <router-outlet></router-outlet>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<confirm-dialog [(visible)]="confirmDialogVisible"
+              [context]="confirmDialogContext">
+</confirm-dialog>

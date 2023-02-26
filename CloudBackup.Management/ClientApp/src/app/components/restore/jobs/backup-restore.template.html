@@ -1,0 +1,55 @@
+<div class="wrapper">
+    <div class="toolbar">
+        <dx-text-box id="backup-restore-search" class="search-input" mode="search" valueChangeEvent="change input"
+            (onValueChanged)="onSearchValueChanged($event)">
+        </dx-text-box>
+        <div class="icon-bar">
+            <div class="button primary create" [ngClass]="{'hide': !canEdit}" (click)="createJob()">
+                <span>Create Job</span>
+            </div>
+            <div id="restore-log" class="button log" [ngClass]="{'hide': !canShowLog }" (click)="viewLog()">
+                <span>View Log</span>
+            </div>
+        </div>
+    </div>
+    <dx-popup class="popup" [width]="800" [height]="600" [shading]="false" [dragEnabled]="false"
+        [showCloseButton]="true" [closeOnOutsideClick]="true" [(visible)]="showLog" title="Restore log">
+        <div *dxTemplate="let data of 'content'">
+            <dx-scroll-view class="popup-wrapper" style="height: 100%;">
+                <ul style="white-space: pre-wrap;">
+                    <li *ngFor="let entry of logEntries">{{entry}}</li>
+                </ul>
+            </dx-scroll-view>
+        </div>
+    </dx-popup>
+    <dx-data-grid id="backup-restore-grid" #backupRestoreGrid class="colored" [dataSource]="restoreJobs"
+                  [columns]="columns" width="100%" [customizeColumns]="customizeColumns" (onRowClick)="onRowClick($event)"
+                  (onContextMenuPreparing)="onContextMenuPreparing($event)"
+                  [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }"
+                  [(selectedRowKeys)]="selectedRowKeys"
+                  [stateStoring]="{ enabled: true, storageKey: storageKey, type: 'custom', customLoad: customLoad, customSave: customSave }">
+      <div *dxTemplate="let cell of 'restoreJobResultTemplate'">
+        <span style="vertical-align: text-bottom;">
+          {{cell.data.result}}
+        </span>
+        <span style="vertical-align: middle" [ngClass]="{'icon-error': cell.data.result === 'Failed'}">
+        </span>
+      </div>
+      <dxo-paging [pageSize]="10"> </dxo-paging>
+      <dxo-pager [visible]="true"
+                 [allowedPageSizes]="gridsettings.allowedPageSizes"
+                 [displayMode]="gridsettings.displayMode"
+                 [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                 [showInfo]="gridsettings.showInfo"
+                 [showNavigationButtons]="gridsettings.showNavButtons">
+      </dxo-pager>
+      <dxo-selection mode="multiple"
+                     selectAllMode="page">
+        <!-- or "allPages" -->
+      </dxo-selection>
+    </dx-data-grid>
+
+    <add-restore-job-wizard *ngIf="canEdit" id="add-restore-job-wizard" [(popupVisible)]="createJobPopupVisible"
+        (restoreJobCreated)="onRestoreJobCreated()">
+    </add-restore-job-wizard>
+</div>

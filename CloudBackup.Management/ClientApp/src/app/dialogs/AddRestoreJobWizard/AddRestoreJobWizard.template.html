@@ -1,0 +1,273 @@
+<dx-popup [visible]="popupVisible" width="880" height="600" [title]="title" (onShowing)="onShow()"
+    (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="wizard" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="wizard-wrapper popup">
+            <div class="wizard-wrapper-title">
+                <span class="wizard-wrapper-description">{{steps[stepIndex].Description}}</span>
+                <span class="wizard-wrapper-sub-description">{{steps[stepIndex].SubDescription}}</span>
+            </div>
+            <table class="wizard-table">
+                <tr>
+                    <td class="first-column">
+                        <ul class="wizard-wrapper-menu">
+                            <li *ngFor="let step of steps; let i = index;" (click)="setStepIndex(i)"
+                                [ngClass]="i == stepIndex? 'active': ''">
+                                <span class="menu-text">{{step.Title}}</span>
+                        </ul>
+                    </td>
+                    <td class="second-column">
+                        <div [ngClass]="stepIndex != 0? 'hide': ''" class="wizard-step step1">
+                            <div class="wizard-step-content">
+                                <div class="wrapper">
+                                    <div class="toolbar line-height-normal">
+                                        <div style="display: inline-block">
+                                            <dx-text-box id="restore-backups-search" class="search-input" mode="search"
+                                                valueChangeEvent="change input"
+                                                (onValueChanged)="onSearchValueChanged(restoreBackupsGrid, $event)">
+                                            </dx-text-box>
+                                        </div>
+                                        <div class="select-title">
+                                            Tenant:
+                                        </div>
+                                        <div class="inline-block">
+                                            <dx-select-box class="toolbar-item" [disabled]="!canSelectTenants"
+                                                [dataSource]="tenants" [(value)]="selectedTenantId"
+                                                (onValueChanged)="onTenantValueChanged($event)" displayExpr="Name"
+                                                valueExpr="Id" width="200">
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                </div>
+                                <dx-data-grid class="colored" #restoreBackupsGrid id="restore-backups-grid"
+                                              selectRowOnClick [disabled]="restoreJobInstancesLoading || restoreJobDisksLoading"
+                                              [dataSource]="backups" [columns]="backupsColumns" width="100%" height="300px"
+                                              [paging]="{ pageSize: 7 }" [pager]="{ showPageSizeSelector: false }"
+                                              [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }"
+                                              [(selectedRowKeys)]="selectedBackups"
+                                              (onSelectionChanged)="onBackupSelectionChanged()">
+                                  <div *dxTemplate="let cell of 'backupStatusTemplate'">
+                                    <span style="vertical-align: text-bottom;">
+                                      {{cell.value}}
+                                    </span>
+                                    <span class="align-middle" [ngClass]="{
+                                                  'icon-warning': cell.value === 'Warning',
+                                                  'icon-error': cell.value === 'Failed'
+                                                  }">
+                                    </span>
+                                  </div>
+                                  <dxo-paging [pageSize]="10"> </dxo-paging>
+                                  <dxo-pager [visible]="true"
+                                             [allowedPageSizes]="gridsettings.allowedPageSizes"
+                                             [displayMode]="gridsettings.displayMode"
+                                             [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                                             [showInfo]="gridsettings.showInfo"
+                                             [showNavigationButtons]="gridsettings.showNavButtons">
+                                  </dxo-pager>
+                                  <dxo-selection mode="multiple"
+                                                 selectAllMode="page">
+                                    <!-- or "allPages" -->
+                                  </dxo-selection>
+                                </dx-data-grid>
+                                <div [ngClass]="stepIndex == 0 && !steps[0].IsValid ? '' : 'hide'">
+                                    <span class="red">At least one of the backups must be selected.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div [ngClass]="stepIndex != 1? 'hide': ''" class="wizard-step step2">
+                            <div class="wizard-step-content">
+                                <table class="simple-table standard table-middle margin-top10" style="width:450px">
+                                    <tr>
+                                        <td colspan="2">
+                                            <input id="restoreToOriginalLocationMode" name="restoreLocationMode"
+                                                (change)="setRestoreLocationMode(0)"
+                                                [checked]="restoreLocationMode == 0" class="radio-button"
+                                                type="radio" />
+                                            <label for="restoreToOriginalLocationMode" class="input-label">Restore to
+                                                original location<br /><span style="color:grey">Restore selected objects
+                                                    to the original location</span></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input id="restoreToLocationMode" name="restoreLocationMode"
+                                                (change)="setRestoreLocationMode(1)"
+                                                [checked]="restoreLocationMode == 1" class="radio-button"
+                                                type="radio" />
+                                            <label for="restoreToLocationMode" class="input-label">Restore to a new
+                                                location<br /><span style="color:grey">Customize restored object
+                                                    location</span></label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span style="margin-left:30px">Restore to region:</span>
+                                        </td>
+                                        <td>
+                                            <dx-select-box [disabled]="restoreLocationMode !== 1"
+                                                [(value)]="selectedRegion" (onValueChanged)="onSelectedRegionChanged()"
+                                                [dataSource]="regions" displayExpr="name" valueExpr="name" width="250">
+                                            </dx-select-box>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span style="margin-left:30px">Restore to account:</span>
+                                        </td>
+                                        <td>
+                                            <dx-select-box [disabled]="restoreLocationMode !== 1"
+                                                [(value)]="selectedProfileId"
+                                                (onValueChanged)="onSelectedProfileChanged()" [dataSource]="profiles"
+                                                displayExpr="Name" valueExpr="Id" width="250">
+                                            </dx-select-box>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div> -->
+                        <div [ngClass]="stepIndex != 1? 'hide': ''" class="wizard-step step3 tabs-scroll-wrapper">
+                            <dx-tabs [scrollByContent]="true" [showNavButtons]="true"
+                                [dataSource]="restoreJobObjectTabs" [(selectedItem)]="selectedRestoreJobObjectTab">
+                            </dx-tabs>
+                            <div [ngClass]="selectedRestoreJobObjectTab?.id != 0 ? 'hide': ''">
+                                <div class="wizard-step-content">
+                                    <div class="toolbar">
+                                        <dx-text-box id="restore-instances-search" class="search-input" mode="search"
+                                            valueChangeEvent="change input"
+                                            (onValueChanged)="onSearchValueChanged(selectedInstancesGrid, $event)">
+                                        </dx-text-box>
+                                        <div class="icon-bar">
+                                            <div [ngClass]="restoreJobSelectedInstances?.length == 0 ? 'hide': ''">
+                                                <div class="button primary center create" 
+                                                    (click)="showInstanceRestoreOptions()">
+                                                    <span>Restore Options</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <dx-data-grid id="selected-instances-grid" class="colored" #selectedInstancesGrid
+                                                  selectRowOnClick updateDimensionsOnVisible [dataSource]="restoreJobInstances"
+                                                  (onSelectionChanged)="onObjectSelectionChanged($event)"
+                                                  [(selectedRowKeys)]="restoreJobSelectedInstances"
+                                                  [columns]="selectedInstanceColumns" width="100%" height="290px" [paging]="{ pageSize:5 }"
+                                                  [pager]="{ showPageSizeSelector: false }">
+                                      <dxo-paging [pageSize]="10"> </dxo-paging>
+                                      <dxo-pager [visible]="true"
+                                                 [allowedPageSizes]="gridsettings.allowedPageSizes"
+                                                 [displayMode]="gridsettings.displayMode"
+                                                 [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                                                 [showInfo]="gridsettings.showInfo"
+                                                 [showNavigationButtons]="gridsettings.showNavButtons">
+                                      </dxo-pager>
+                                      <dxo-selection mode="multiple"
+                                                     selectAllMode="page">
+                                        <!-- or "allPages" -->
+                                      </dxo-selection>
+                                    </dx-data-grid>
+                                </div>
+                            </div>
+                            <div [ngClass]="selectedRestoreJobObjectTab?.id != 1 ? 'hide': ''">
+                                <div class="wizard-step-content">
+                                    <div class="toolbar">
+                                        <dx-text-box id="restore-disks-search" class="search-input" mode="search"
+                                            valueChangeEvent="change input"
+                                            (onValueChanged)="onSearchValueChanged(selectedDisksGrid, $event)">
+                                        </dx-text-box>
+                                        <dx-check-box [(value)]="showAttachedDisks" text="Show instance disks">
+                                        </dx-check-box>
+                                        <!--<div class="icon-bar">
+                                            <div [ngClass]="restoreJobSelectedDisks?.length == 0 ? 'hide': ''">
+                                                <div class="button primary center create" style="margin-left:10px"
+                                                    (click)="showDiskRestoreOptions()">
+                                                  <span>Restore Options</span>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                    </div>
+                                    <dx-data-grid id="selected-disks-grid" class="colored" #selectedDisksGrid
+                                                  selectRowOnClick updateDimensionsOnVisible [dataSource]="restoreJobDisks"
+                                                  (onSelectionChanged)="onObjectSelectionChanged($event)" height="290px"
+                                                  [(selectedRowKeys)]="restoreJobSelectedDisks" [columns]="selectedDiskColumns"
+                                                  width="100%" [paging]="{ pageSize:5 }"
+                                                  [pager]="{ showPageSizeSelector: false }">
+                                      <dxo-paging [pageSize]="10"> </dxo-paging>
+                                      <dxo-pager [visible]="true"
+                                                 [allowedPageSizes]="gridsettings.allowedPageSizes"
+                                                 [displayMode]="gridsettings.displayMode"
+                                                 [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                                                 [showInfo]="gridsettings.showInfo"
+                                                 [showNavigationButtons]="gridsettings.showNavButtons">
+                                      </dxo-pager>
+                                      <dxo-selection mode="multiple"
+                                                     selectAllMode="page">
+                                        <!-- or "allPages" -->
+                                      </dxo-selection>
+                                    </dx-data-grid>
+                                </div>
+                            </div>
+                            <div [ngClass]="stepIndex == 2 && !steps[2].IsValid ? '' : 'hide'">
+                                <span style="margin-left:30px;color:red">{{validationMessageText}}</span>
+                            </div>
+                        </div>
+                        <div [ngClass]="stepIndex != 2? 'hide': ''" class="wizard-step step4">
+                            <div class="wizard-step-content">
+                                <table class="simple-table standard margin-top10">
+                                    <tr>
+                                      <td class="light-secondary-text" style="vertical-align:top; width:130px">
+                                        <span>Selected Objects:</span>
+                                      </td>
+                                        <td>
+                                            <items-list-block [items]="selectedObjects"></items-list-block>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <dxi-toolbar-item *ngIf="stepIndex != 0" widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Back',
+        elementAttr:gridsettings.backclass,
+        onClick: prevStep,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item *ngIf="stepIndex != steps.length - 1" widget="dxButton" [toolbar]="'bottom'" location="after"
+        [options]="{
+        text: 'Next',
+          elementAttr:gridsettings.nextclass,
+        onClick: nextStep,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Finish',
+        elementAttr:gridsettings.finishclass,
+        onClick: onComplete,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+        elementAttr:gridsettings.cancelclass,
+        onClick: onHiding,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>
+
+<restore-job-instance-options-dialog id="instance-options-dialog"
+                                     [(instanceOptions)]="restoreInstanceOptions"
+                                     [backupIds]="selectedBackupIds"
+                                     [instances]="restoreJobSelectedInstances"
+                                     [(popupVisible)]="instanceOptionsDialogVisible">
+</restore-job-instance-options-dialog>
+
+<restore-job-disk-options-dialog id="disk-options-dialog"
+                                   [(diskOptions)]="restoreDiskOptions"
+                                   [backupIds]="selectedBackupIds"
+                                   [disks]="restoreJobSelectedDisks"
+                                   [(popupVisible)]="diskOptionsDialogVisible">
+</restore-job-disk-options-dialog>

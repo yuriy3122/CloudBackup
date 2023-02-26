@@ -1,0 +1,31 @@
+<dx-popup id="SelectDailyIntervalsPopup"
+          [(visible)]="popupVisible"
+          width="auto" height="auto"
+          title="Time periods"
+          (onShowing)="onShow()"
+          (onHiding)="onHiding()"
+          [dragEnabled]="false"
+          [showCloseButton]="true" class="dialog"
+          [copyRootClassesToWrapper]="true">
+  <div *dxTemplate="let t = data of 'content'">
+    <div class="popup wizard-step-content">
+      <daily-intervals-selector [(dailyIntervals)]="dailyIntervalsToEdit"
+                                [emptyAsFull]="true"
+                                enabledText="Permitted"
+                                disabledText="Denied"></daily-intervals-selector>
+    </div>
+  </div>
+
+  <dxi-toolbar-item toolbar="bottom"
+                    location="after">
+    <div class="button primary finish margin-left10" (click)="save()">
+      <span>Ok</span>
+    </div>
+  </dxi-toolbar-item>
+  <dxi-toolbar-item toolbar="bottom"
+                    location="after">
+    <div class="button secondary margin-left10" (click)="hide()">
+      <span>Cancel</span>
+    </div>
+  </dxi-toolbar-item>
+</dx-popup>

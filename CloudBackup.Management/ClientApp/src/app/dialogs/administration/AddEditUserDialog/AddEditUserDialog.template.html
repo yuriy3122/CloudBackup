@@ -1,0 +1,151 @@
+<dx-popup id="AddEditUserPopup" [visible]="popupVisible" width="600" height="'auto'" [title]="title"
+          (onShowing)="onShow()" (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="dialog" [copyRootClassesToWrapper]="true">
+  <div *dxTemplate="let t = data of 'content'">
+    <div class="popup wizard-step-content">
+      <table class="simple-table short-td width100">
+        <tr>
+          <td class="width20">
+            Login:
+          </td>
+          <td class="width80">
+            <dx-text-box [(value)]="user.Login"
+                         [disabled]="initialLogin.length > 0"
+                         [isValid]="!errors.has(UserInputType.Login)"
+                         [validationError]="{ message: errors.get(UserInputType.Login)}"
+                         (onValueChanged)="onValueChanged(UserInputType.Login)"></dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Enabled:
+          </td>
+          <td>
+            <dx-check-box [(value)]="isUserEnabled">
+            </dx-check-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Password:
+          </td>
+          <td>
+            <dx-text-box mode="password"
+                         [(value)]="password"
+                         [isValid]="!errors.has(UserInputType.Password)"
+                         [validationError]="{ message: errors.get(UserInputType.Password)}"
+                         (onFocusIn)="onPasswordFocusIn()"
+                         (onFocusOut)="onPasswordFocusOut()"
+                         (onInput)="onPasswordInput()"
+                         (onValueChanged)="onValueChanged(UserInputType.Password)"></dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Repeat Password:
+          </td>
+          <td>
+            <dx-text-box mode="password"
+                         [(value)]="confirmPassword"
+                         [isValid]="!errors.has(UserInputType.ConfirmPassword)"
+                         [validationError]="{ message: errors.get(UserInputType.ConfirmPassword)}"
+                         (onFocusIn)="onConfirmPasswordFocusIn()"
+                         (onFocusOut)="onConfirmPasswordFocusOut()"
+                         (onInput)="onConfirmPasswordInput()"
+                         (onValueChanged)="onValueChanged(UserInputType.ConfirmPassword)"></dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Name:
+          </td>
+          <td>
+            <dx-text-box [(value)]="user.Name"
+                         [isValid]="!errors.has(UserInputType.Name)"
+                         [validationError]="{ message: errors.get(UserInputType.Name)}"
+                         (onValueChanged)="onValueChanged(UserInputType.Name)"></dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            E-mail:
+          </td>
+          <td>
+            <dx-text-box mode="email"
+                         [(value)]="user.Email"
+                         [isValid]="!errors.has(UserInputType.Email)"
+                         [validationError]="{ message: errors.get(UserInputType.Email)}"
+                         (onValueChanged)="onValueChanged(UserInputType.Email)"></dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            UTC offset:
+          </td>
+          <td>
+            <dx-select-box [items]="utcOffsets"
+                           [(value)]="selectedUtcOffsetTotalMinutes"
+                           valueExpr="Offset.TotalMinutes"
+                           displayExpr="Name"
+                           [isValid]="!errors.has(UserInputType.UtcOffset)"
+                           [validationError]="{ message: errors.get(UserInputType.UtcOffset)}"
+                           (onValueChanged)="onValueChanged(UserInputType.UtcOffset)">
+            </dx-select-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Role:
+          </td>
+          <td>
+            <dx-select-box [items]="roles"
+                           [(value)]="selectedRoleId"
+                           displayExpr="Name"
+                           valueExpr="Id"
+                           [disabled]="!canSelectRoles"
+                           [isValid]="!errors.has(UserInputType.Role)"
+                           [validationError]="{ message: errors.get(UserInputType.Role)}"
+                           (onValueChanged)="onValueChanged(UserInputType.Role)"
+                           placeholder="Select a role...">
+            </dx-select-box>
+          </td>
+        </tr>
+        <tr [ngClass]="{'hide': !canSelectTenant}">
+          <td>
+            Tenant:
+          </td>
+          <td>
+            <dx-select-box [items]="tenants"
+                           [(value)]="selectedTenantId"
+                           displayExpr="Name"
+                           valueExpr="Id"
+                           [isValid]="!errors.has(UserInputType.Tenant)"
+                           [validationError]="{ message: errors.get(UserInputType.Tenant)}"
+                           (onValueChanged)="onValueChanged(UserInputType.Tenant)"
+                           placeholder="Select a tenant...">
+            </dx-select-box>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Description:
+            <br />
+            <dx-text-area [(value)]="user.Description"></dx-text-area>
+          </td>
+        </tr>
+      </table>
+      <span class="red-text" *ngIf="errorMessage !== ''">{{errorMessage}}</span>
+    </div>
+  </div>
+  <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+         elementAttr:gridsettings.finishclass,
+        onClick: save,
+        focusStateEnabled: false}">
+  </dxi-toolbar-item>
+  <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+          elementAttr:gridsettings.cancelclass,
+        onClick: hide,
+        focusStateEnabled: false}">
+  </dxi-toolbar-item>
+</dx-popup>

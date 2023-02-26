@@ -1,0 +1,11 @@
+<div class="sidebar" >
+  <ul class="nav nav-sidebar" style="padding-top:20px;">
+    <li *ngFor="let route of leftMenu" [ngClass]="{'active': currentRoute == route}">
+      <a class="menu-icon {{route?.data?.class || 'backup'}}" (click)="setCurrentRoute(route)" [routerLink]="route.path"
+      [routerLinkActive]="['active']"
+      [ngClass]="{'active': currentRoute == route}">
+        <span class="menu-text">{{route?.data?.title}}</span>
+      </a>
+    </li>
+  </ul>
+</div>

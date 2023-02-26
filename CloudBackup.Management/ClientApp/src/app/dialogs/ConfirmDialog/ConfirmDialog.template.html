@@ -1,0 +1,28 @@
+<dx-popup [(visible)]="visible"
+          width="500px" height="'auto'"
+          [title]="context.title"
+          (onShowing)="onShow()"
+          (onHiding)="onHiding()"
+          [dragEnabled]="false"
+          [showCloseButton]="context.canClose" class="dialog" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="popup wizard-step-content" style="word-wrap: break-word;">
+            <h4>{{context.text}}</h4>
+        </div>
+    </div>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+           elementAttr:gridsettings.finishclass,
+        onClick: yes,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after"
+        [options]="{
+        text: 'Cancel',
+         elementAttr:gridsettings.cancelclass,
+        onClick: no,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

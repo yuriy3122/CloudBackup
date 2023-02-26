@@ -1,0 +1,20 @@
+.login-table {
+    width: 385px;
+    margin: 100px auto 0;
+    padding: 20px;
+    border-radius: 2px;
+    border: 1px solid var(--button-border);
+
+    .dx-button {
+        background: var(--bg-button);
+        border: none;
+
+        color: var(--text-button);
+        border-radius: 4px;
+
+        &:hover {
+            background: var(--bg-button-hover);
+
+        }
+    }
+}

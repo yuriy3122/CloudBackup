@@ -1,0 +1,50 @@
+<div class="wrapper">
+  <div class="toolbar">
+    <dx-text-box id="administration-users-search"
+                 class="search-input"
+                 mode="search"
+                 valueChangeEvent="change input"
+                 (onValueChanged)="onSearchValueChanged($event)">
+    </dx-text-box>
+    <div class="icon-bar" [ngClass]="{'hide': isReadOnly}">
+      <div class="button primary create" (click)="createUser()" id="user-create">
+        <span>Add User</span>
+      </div>
+      <div class="button secondary edit" (click)="editUser()" id="user-edit" [ngClass]="{'hide': !canEdit}">
+        <span>Edit</span>
+      </div>
+      <div class="button secondary delete" (click)="deleteUsers()" [ngClass]="{'hide': !canDelete}" id="user-delete" data-toggle="tooltip">
+        <span>Delete</span>
+      </div>
+    </div>
+  </div>
+  <dx-data-grid class="colored"
+                id="administration-users-grid"
+                [dataSource]="users"
+                [columns]="columns"
+                width="100%"
+               
+                (onRowClick)="onRowClick($event)"
+                [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }"
+                [(selectedRowKeys)]="selectedRowKeys"
+                [stateStoring]="{ enabled: true, storageKey: storageKey, type: 'custom', customLoad: customLoad, customSave: customSave }">
+    <dxo-paging [pageSize]="10"> </dxo-paging>
+    <dxo-pager [visible]="true"
+               [allowedPageSizes]="gridsettings.allowedPageSizes"
+               [displayMode]="gridsettings.displayMode"
+               [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+               [showInfo]="gridsettings.showInfo"
+               [showNavigationButtons]="gridsettings.showNavButtons">
+    </dxo-pager>
+    <dxo-selection mode="multiple"
+                   selectAllMode="page">
+      <!-- or "allPages" -->
+    </dxo-selection>
+  </dx-data-grid>
+
+  <add-edit-user-dialog [(user)]="user"
+                        [(popupVisible)]="popupShow"
+                        id="add-edit-user-dialog"
+                        (userChange)="onUserChanged($event)">
+  </add-edit-user-dialog>
+</div>

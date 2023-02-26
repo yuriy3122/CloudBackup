@@ -1,0 +1,37 @@
+<div class="wrapper">
+  <div class="toolbar">
+    <div class="icon-bar">
+      <div class="button primary create" (click)="createNotificationConfig()" id="notification-config-create" >
+        <span>Add</span>
+      </div>
+      <div class="button secondary edit" (click)="editNotificationConfig()" id="notification-config-edit" [ngClass]="{'hide': !canEdit}">
+        <span>Edit</span>
+      </div>
+      <div class="button secondary delete" (click)="deleteNotificationConfig()" id="notification-config-delete" [ngClass]="{'hide': !canDelete}">
+        <span>Delete</span>
+      </div>
+    </div>
+  </div>
+  <dx-data-grid width="100%"
+                #notificationConfigsGrid class="colored" id="notification-config-grid" [dataSource]="notifications"
+                [columns]="columns"  [customizeColumns]="customizeColumns" (onRowClick)="onRowClick($event)"
+                [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }"
+                [(selectedRowKeys)]="selectedRowKeys"
+                [stateStoring]="{ enabled: true, storageKey: storageKey, type: 'custom', customLoad: customLoad, customSave: customSave }">
+    <dxo-paging [pageSize]="10"> </dxo-paging>
+    <dxo-pager [visible]="true"
+               [allowedPageSizes]="gridsettings.allowedPageSizes"
+               [displayMode]="gridsettings.displayMode"
+               [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+               [showInfo]="gridsettings.showInfo"
+               [showNavigationButtons]="gridsettings.showNavButtons">
+    </dxo-pager>
+    <dxo-selection mode="multiple"
+                   selectAllMode="page">
+      <!-- or "allPages" -->
+    </dxo-selection>
+  </dx-data-grid>
+  <add-edit-notification-dialog [(notificationConfig)]="notification" [(popupVisible)]="popupShow" (notificationConfigChange)="onNotificationConfigChanged($event)">
+    id="add-edit-notification-dialog">
+  </add-edit-notification-dialog>
+</div>

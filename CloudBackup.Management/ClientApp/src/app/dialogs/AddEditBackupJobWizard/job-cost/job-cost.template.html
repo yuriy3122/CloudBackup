@@ -1,0 +1,33 @@
+﻿<div style="min-width: 210px;">
+    <span class="margin-right5">Estimated cost:</span>
+    <span *ngIf="jobCostLoading" class="right">loading...</span>
+    <div *ngIf="!jobCostLoading" class="inline-block right">
+        <span>{{jobCost ? (jobCost.cost | currency:jobCost.currency:'symbol':'1.2-2') + ' / month' : ''}}</span>
+        <div *ngIf="jobCost && jobCost.objectCosts && jobCost.objectCosts.length > 0"
+             class="inline-block align-middle">
+            <div id="jobCostInfo" class="icon-info inline-block"></div>
+            <dx-tooltip target="#jobCostInfo"
+                        showEvent="dxhoverstart"
+                        hideEvent="dxhoverend">
+                <div *dxTemplate="let data = data of 'content'" class="text-left">
+                    <ul class="padding-left20">
+                        <li *ngFor="let objectCost of jobCost.objectCosts">
+                            <span>{{objectCost.jobObjectTypeName}}</span>
+                            <ul class="padding-left20">
+                                <li *ngFor="let costDetails of objectCost.details">
+                                    <span>{{costDetails.costDescription}}: {{costDetails.cost | currency:costDetails.currency:'symbol':'1.2-2'}}</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p style="font-size: 9px">
+                        <span>Costs are estimated based on following statistics:</span><br />
+                        <span>Amount of data changed daily: {{jobCost.dailyDataChangeRatio | percent}}</span><br />
+                        <span>Used disk space: {{jobCost.usedDiskSpaceRatio | percent}}</span><br />
+                        <span>Data compression ratio: {{jobCost.compressionRatio}}</span><br />
+                    </p>
+                </div>
+            </dx-tooltip>
+        </div>
+    </div>
+</div>

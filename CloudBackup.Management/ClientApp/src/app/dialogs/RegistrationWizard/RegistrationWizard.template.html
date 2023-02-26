@@ -1,0 +1,175 @@
+<div class="registration-wizard">
+  <div class="login-header text-left">
+    <h4 >{{title}}</h4>
+  </div>
+  <div class="login-table ">
+    <div>
+      <div class="wizard-wrapper">
+        <div class="wizard-wrapper-title">
+          <span class="wizard-wrapper-description">{{Steps[stepIndex].Description}}</span>
+          <span class="wizard-wrapper-sub-description">{{Steps[stepIndex].SubDescription}}</span>
+        </div>
+        <table class="wizard-table width100">
+          <tr>
+            <td class="first-column">
+             
+              <ul class="wizard-wrapper-menu">
+                <li *ngFor="let step of Steps; let i = index;" (click)="setStepIndex(i)" [ngClass]="i == stepIndex? 'active': ''">
+                  <!--  [ngClass]=" i == Steps.length-1? 'hide': ( i == stepIndex? 'active': '')" -->
+                  <span class="menu-text">{{step.Title}}</span>
+              </ul>
+            </td>
+            <td class="second-column">
+              <div class="">
+                <div [ngClass]="stepIndex != 0? 'hide': ''" class="wizard-step step1">
+                  <div class="wizard-step-content">
+                    <table class="simple-table registration-table table-middle width100">
+                      <tr>
+                        <td class="width35">
+                           Backup Instance ID:
+                        </td>
+                        <td>
+                          <dx-text-box [(value)]="configuration.InstanceId"
+                                       (onValueChanged)="onInputChanged(RegistrationInputType.InstanceId)"
+                                       [isValid]="!errors[RegistrationInputType.InstanceId]"
+                                       [validationError]="{ message: errorMessages[RegistrationInputType.InstanceId] || 'Enter correct Instance Id'}">
+                          </dx-text-box>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                        </td>
+                      </tr>
+                    </table>
+                    <div  style="padding-bottom: 40px;">
+                      <dx-check-box class="align-top"
+                                    text="I have read and accept the "
+                                    [(value)]="licenseAccepted"
+                                    (onValueChanged)="onLicenseAcceptedChanged()"
+                                    [(isValid)]="licenseAcceptanceValid"
+                                    [validationError]="{ message: 'License agreement must be accepted to continue'}"
+                                    validationMessageMode="always">
+                      </dx-check-box>
+                      <a class="align-middle" href="http://-backup/eula.html">licence agreement</a>
+                    </div>
+                  </div>
+                </div>
+                <div [ngClass]="stepIndex != 1? 'hide': ''" class="wizard-step step2">
+                  <div class="wizard-step-content">
+                    <table class="simple-table registration-table table-middle width100">
+                      <tr>
+                        <td class="width25">
+                          User name:
+                        </td>
+                        <td>
+                          <dx-text-box [(value)]="configuration.UserName"
+                                       (onValueChanged)="onInputChanged(RegistrationInputType.UserName)"
+                                       [isValid]="!errors[RegistrationInputType.UserName]"
+                                       [validationError]="{ message: 'Enter correct User Name'}">
+                            <dx-validator>
+                              <dxi-validation-rule type="pattern" [pattern]="loginPattern"
+                                                   message="Login may only contain latin characters, numbers and underscores and cannot start with a number">
+                              </dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          E-mail:
+                        </td>
+                        <td>
+                          <dx-text-box [mode]="'email'"
+                                       [(value)]="configuration.Email"
+                                       (onValueChanged)="onInputChanged(RegistrationInputType.Email)"
+                                       [isValid]="!errors[RegistrationInputType.Email]"
+                                       [validationError]="{ message: 'Enter correct Email'}">
+                            <dx-validator>
+                              <dxi-validation-rule type="email" message="Email is required"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Password:
+                        </td>
+                        <td>
+                          <dx-text-box [mode]="'password'" [(value)]="configuration.Password">
+                            <dx-validator>
+                              <dxi-validation-rule type="pattern" [pattern]="passwordPattern"
+                                                   message="Password must contain only latin characters, numbers or special symbols">
+                              </dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Password (again):
+                        </td>
+                        <td>
+                          <dx-text-box [mode]="'password'"
+                                       [(value)]="password"
+                                       (onValueChanged)="onPasswordChanged()"
+                                       [isValid]="!errors[RegistrationInputType.Password]"
+                                       [validationError]="{ message: 'Enter correct Password'}">
+                            <dx-validator>
+                              <dxi-validation-rule type="pattern" [pattern]="passwordPattern"
+                                                   message="Password must contain only latin characters, numbers or special symbols">
+                              </dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div [ngClass]="stepIndex != 2? 'hide': ''" class="wizard-step step3">
+                  <div class="wizard-step-content">
+                    <table class="simple-table  registration-table width100">
+                      <tr>
+                        <td>
+                          UTC offset:
+                        </td>
+                        <td>
+                          <dx-select-box [dataSource]="utcOffsets"
+                                         [(value)]="configuration.UtcOffset"
+                                         valueExpr="Offset"
+                                         displayExpr="Name"
+                                         [searchEnabled]="true">
+                          </dx-select-box>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div [ngClass]="(stepIndex === Steps.length - 1) ? '': 'hide'" class="wizard-step step6">
+                  <div class="wizard-step-content">
+                    <div class="loading-spinner"></div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div [ngClass]="stepIndex == Steps.length - 2 && errorMessage != null && errorMessage.length > 0 ? '': 'hide'">
+          <span class="red">{{errorMessage}}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="registration-wizard-cw top-border">
+    <div class="buttons-container" [ngClass]="(stepIndex != Steps.length) ? '': 'hide'">
+      <table class="buttons-table">
+        <tr>
+          <td><dx-button *ngIf="stepIndex != 0" class="button secondary back" (onClick)="prevStep()" [text]="buttonBackText"></dx-button></td>
+          <td><dx-button *ngIf="stepIndex != Steps.length - 1" class="button secondary next" (onClick)="nextStep()" [text]="buttonNextText"></dx-button></td>
+          <td><dx-button *ngIf="stepIndex == Steps.length - 1" class="button primary" (onClick)="onComplete()" [text]="buttonEndText"></dx-button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+

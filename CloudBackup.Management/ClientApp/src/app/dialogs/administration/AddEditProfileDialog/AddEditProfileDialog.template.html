@@ -1,0 +1,79 @@
+<dx-popup id="AddEditProfilePopup" [visible]="popupVisible" width="600" height="'auto'" [title]="title"
+          (onShowing)="onShow()" (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="dialog" [copyRootClassesToWrapper]="true">
+  <div *dxTemplate="let t = data of 'content'">
+    <div class="popup wizard-step-content">
+      <table class="simple-table" style="width:100%">
+        <tr>
+          <td  class="width25">
+            Name:
+          </td>
+          <td class="width75">
+            <dx-text-box [(value)]="profile.Name" [isValid]="!errors.has(ProfileInputType.Name)"
+                         [validationError]="{ message: errors.get(ProfileInputType.Name)}"
+                         (onValueChanged)="onValueChanged(ProfileInputType.Name)"></dx-text-box>
+          </td>
+        </tr>
+        <tr [ngClass]="{'hide': !canSelectTenant}">
+          <td>
+            Tenant:
+          </td>
+          <td>
+            <dx-select-box [items]="tenants" [(value)]="selectedTenantId" displayExpr="Name" valueExpr="Id"
+                           [disabled]="profile.UsedInJobs"
+                           [hint]="profile.UsedInJobs ? 'Can not change tenants of account with associated jobs.' : ''"
+                           style="pointer-events: initial" [isValid]="!errors.has(ProfileInputType.Tenant)"
+                           [validationError]="{ message: errors.get(ProfileInputType.Tenant)}"
+                           (onValueChanged)="onValueChanged(ProfileInputType.Tenant)" placeholder="Select a tenant...">
+            </dx-select-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Service Account Id:
+          </td>
+          <td>
+            <dx-text-box [(value)]="profile.ServiceAccountId"
+                         [isValid]="!errors.has(ProfileInputType.ServiceAccountId)"
+                         [validationError]="{ message: errors.get(ProfileInputType.ServiceAccountId)}"
+                         (onValueChanged)="onValueChanged(ProfileInputType.ServiceAccountId)">
+            </dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Key Id:
+          </td>
+          <td>
+            <dx-text-box [(value)]="profile.KeyId"
+                         [isValid]="!errors.has(ProfileInputType.KeyId)"
+                         [validationError]="{ message: errors.get(ProfileInputType.KeyId)}"
+                         (onValueChanged)="onValueChanged(ProfileInputType.KeyId)">
+            </dx-text-box>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Private Key:
+            <br />
+            <dx-text-area [(value)]="profile.PrivateKey"></dx-text-area>
+          </td>
+        </tr>
+      </table>
+      <span class="red-text" *ngIf="errorMessage !== ''">{{errorMessage}}</span>
+    </div>
+  </div>
+  <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+       elementAttr:gridsettings.finishclass,
+        onClick: save,
+        focusStateEnabled: false
+    }">
+  </dxi-toolbar-item>
+  <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+      elementAttr:gridsettings.cancelclass,
+        onClick: hide,
+        focusStateEnabled: false
+    }">
+  </dxi-toolbar-item>
+</dx-popup>

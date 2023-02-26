@@ -1,0 +1,87 @@
+<div id="content">
+    <dx-popup [visible]="popupVisible"
+              width="880" height="600"
+              [title]="title"
+              (onShowing)="onShow()" (onHiding)="onHiding()"
+              [dragEnabled]="false"
+              [showCloseButton]="true"  class="wizard" [copyRootClassesToWrapper]="true">
+        <div *dxTemplate="let t = data of 'content'">
+            <div class="wizard-wrapper popup">
+                <table class="wizard-table long">
+                    <tr>
+                        <td class="first-column">
+                            <ul class="wizard-wrapper-menu text-default" style="overflow: auto; width: 100%; height: 100%;">
+                                <li *ngFor="let disk of disks; let i = index;"
+                                    (click)="selectDisk(i)"
+                                    [ngClass]="{'active': i === selectedIndex}">
+                                    <span style="vertical-align: middle">{{disk.name || disk.instanceId}}</span>
+                                </li>
+                            </ul>
+                        </td>
+                        <td class="second-column">
+                            <div style="width: 100%">
+                                <div style="padding: 0px; margin: 0px">
+                                    <dx-tabs [showNavButtons]="false" [dataSource]="diskOptionTabs" [(selectedItem)]="selectedDiskOptionTab">
+                                    </dx-tabs>
+                                </div>
+                                <div [ngClass]="selectedDiskOptionTab.id != 0 ? 'hide': ''">
+                                    <div style="margin: 20px">
+                                        <!-- <table class="simple-table long-td table-middle" style="table-layout: fixed;">
+                                            <tr>
+                                                <td>
+                                                    Disk Type:
+                                                </td>
+                                                <td>
+                                                    <dx-select-box class="toolbar-item"
+                                                                   [dataSource]="diskTypes"
+                                                                   [(value)]="syncDiskTypes"
+                                                                   displayExpr="description"
+                                                                   valueExpr="name"
+                                                                   width="300">
+                                                    </dx-select-box>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Size (GiB):
+                                                </td>
+                                                <td>
+                                                    <dx-number-box [showSpinButtons]="true"
+                                                                   [(value)]="syncDiskCapacity"
+                                                                   width="200"
+                                                                   [min]="minDiskSize"
+                                                                   [max]="maxDiskSize">
+                                                    </dx-number-box>
+                                                </td>
+                                            </tr>
+                                        </table> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <dxi-toolbar-item toolbar="bottom"
+                          location="after">
+            <div class="button primary finish margin-left10" (click)="save()">
+                <span>Ok</span>
+            </div>
+        </dxi-toolbar-item>
+        <dxi-toolbar-item toolbar="bottom"
+                          location="after">
+            <div class="button secondary margin-left10" (click)="hide()">
+                <span>Cancel</span>
+            </div>
+        </dxi-toolbar-item>
+    </dx-popup>
+    <dx-load-panel [position]="{ of: '#content' }"
+                   [visible]="isLoading"
+                   shadingColor="rgba(0,0,0,0.2)"
+                   [showIndicator]="true"
+                   [showPane]="true"
+                   [closeOnOutsideClick]="false">
+    </dx-load-panel>
+</div>

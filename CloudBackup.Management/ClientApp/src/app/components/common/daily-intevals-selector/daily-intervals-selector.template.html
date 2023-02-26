@@ -1,0 +1,90 @@
+<div>
+    <div class="nowrap">
+        <!-- Week day buttons -->
+        <div *ngIf="initialized"
+             class="left stretch-height  ">
+          <p>Select time periods</p>
+            <div *ngFor="let weekDay of weekDayNames; let i = index;">
+                <div class="button secondary center inline-block align-middle "
+                     style="width: 100%;"
+                     [style.height.px]="blockHeight"
+                     [style.margin-bottom.px]="verticalMargin"
+                     (click)="setWeekDay(i)">
+                    <span>{{weekDay}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- Canvas -->
+        <div class="inline-block align-middle margin-left10">
+            <div class="text-center" style="height: 20px;">
+                <span class="icon-night left"></span>
+                <span class="icon-day"></span>
+                <span class="icon-night right"></span>
+            </div>
+            <div *ngIf="initialized" class="clearfix">
+                <div *ngFor="let hour of hourNames; let i = index;"
+                     class="left text-center"
+                     [style.width.px]="blockWidth"
+                     [style.height.px]="blockHeight"
+                     [style.margin-right.px]="horizontalMargin"
+                     [style.margin-bottom.px]="verticalMargin">
+                    <div style="height: 12px;">
+                        <span class="align-top"
+                              [ngClass]="{ 'light-secondary-text': i % 2 !== 0 }"
+                              style="font-size: 10px;">{{hour}}</span>
+                    </div>
+                    <div class="button padding-0"
+                         style="width: 100%; height: calc(100% - 12px);"
+                         (click)="setHour(i);"></div>
+                </div>
+            </div>
+            <canvas #canvas
+                    class="pointer"
+                    width="450" height="300"
+                    (mousedown)="onMouseDown($event)"
+                    (mouseleave)="onMouseLeave($event)"></canvas>
+        </div>
+        <!-- Draw mode -->
+        <div *ngIf="initialized" class="inline-block align-middle margin-left20">
+            <div>
+                <div class="inline-block align-middle"
+                     [style.background]="enabledColor"
+                     [style.width.px]="blockWidth"
+                     [style.height.px]="blockHeight"></div>
+                <label class="margin-left10">
+                    <input class="radio-button"
+                           name="drawMode"
+                           type="radio"
+                           [checked]="drawMode"
+                           (change)="drawMode = true" />
+                    <span class="input-label">{{enabledText}}</span>
+                </label>
+            </div>
+            <div class="margin-top10">
+                <div class="inline-block align-middle"
+                     [style.background]="disabledColor"
+                     [style.width.px]="blockWidth"
+                     [style.height.px]="blockHeight"></div>
+                <label class="margin-left10">
+                    <input class="radio-button"
+                           name="drawMode"
+                           type="radio"
+                           [checked]="!drawMode"
+                           (change)="drawMode = false" />
+                    <span class="input-label">{{disabledText}}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="margin-top10">
+        <span class="align-middle">Time offset within an hour:</span>
+        <dx-number-box class="inline-block align-middle" style="margin: 0 10px;"
+                       width="75"
+                       [showSpinButtons]="true"
+                       [min]="0"
+                       [max]="59"
+                       [(value)]="offsetMinutes"
+                       (onValueChanged)="onStateChanged()"></dx-number-box>
+        <span class="align-middle">minutes</span>
+    </div>
+</div>

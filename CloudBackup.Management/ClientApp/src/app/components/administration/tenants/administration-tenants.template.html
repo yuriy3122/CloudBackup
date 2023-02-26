@@ -1,0 +1,39 @@
+<div class="wrapper">
+    <div class="toolbar">
+        <dx-text-box id="administration-tenants-search" class="search-input" mode="search"
+            valueChangeEvent="change input" (onValueChanged)="onSearchValueChanged($event)">
+        </dx-text-box>
+        <div class="icon-bar" [ngClass]="{'hide': isReadOnly}">
+            <div class="button primary create" (click)="createTenant()" id="tenant-create" >
+                <span>Add Tenant</span>
+            </div>
+            <div class="button secondary edit" (click)="editTenant()" id="tenant-edit" [ngClass]="{'hide': !canEdit}">
+                <span>Edit</span>
+            </div>
+            <div class="button secondary delete" (click)="deleteTenants()" id="tenant-delete" [ngClass]="{'hide': !canDelete}">
+                <span>Delete</span>
+            </div>
+        </div>
+    </div>
+    <dx-data-grid #administrationTenantsGrid class="colored" id="administration-tenants-grid" [dataSource]="tenants"
+                  [columns]="columns" width="100%" [customizeColumns]="customizeColumns" (onRowClick)="onRowClick($event)"
+                  [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }"
+                  [(selectedRowKeys)]="selectedRowKeys"
+                  [stateStoring]="{ enabled: true, storageKey: storageKey, type: 'custom', customLoad: customLoad, customSave: customSave }">
+      <dxo-paging [pageSize]="10"> </dxo-paging>
+      <dxo-pager [visible]="true"
+                 [allowedPageSizes]="gridsettings.allowedPageSizes"
+                 [displayMode]="gridsettings.displayMode"
+                 [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                 [showInfo]="gridsettings.showInfo"
+                 [showNavigationButtons]="gridsettings.showNavButtons">
+      </dxo-pager>
+      <dxo-selection mode="multiple"
+                     selectAllMode="page">
+        <!-- or "allPages" -->
+      </dxo-selection>
+    </dx-data-grid>
+
+    <add-edit-tenant-dialog [(tenant)]="tenant" [(popupVisible)]="popupShow" (tenantChange)="onTenantChanged($event)">id="add-edit-tenant-dialog">
+    </add-edit-tenant-dialog>
+</div>

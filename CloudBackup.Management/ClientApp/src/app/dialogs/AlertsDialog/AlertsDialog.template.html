@@ -1,0 +1,52 @@
+<dx-popup id="AddEditProfilePopup" [visible]="visible" width="900" height="auto" [title]="title" (onShowing)="onShow()"
+    (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="wizard" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="popup wizard-step-content" style="height: 500px">
+          <div class="wrapper" style="padding:20px;">
+            <div class="toolbar" style="height: 36px">
+              <dx-text-box id="alerts-search" class="search-input" mode="search" valueChangeEvent="change input"
+                           (onValueChanged)="onSearchValueChanged($event)">
+              </dx-text-box>
+              <div class="icon-bar">
+                <div class="button" (click)="markRead()" id="alerts-markread" [ngClass]="{'hide': !canMarkRead}">
+                  <span>Mark read</span>
+                </div>
+                <div class="button secondary delete" (click)="deleteAlerts()" id="alerts-delete"
+                     [ngClass]="{'hide': selectedRows.length === 0}">
+                  <span>Delete</span>
+                </div>
+              </div>
+            </div>
+            <dx-data-grid class="colored" id="alerts-grid"
+                          [dataSource]="alerts"
+                          [columns]="columns" (onRowClick)="onRowClick($event)" (onRowPrepared)="onRowPrepared($event)"
+                          [remoteOperations]="{ filtering: true, sorting: true, paging: true }" [(selectedRowKeys)]="selectedRows"
+                          [stateStoring]="{ enabled: true, storageKey: storageKey, type: 'custom', customLoad: customLoad, customSave: customSave }">
+              <div *dxTemplate="let cell of 'alertTypeIconTemplate'">
+                <span style="vertical-align: middle" [ngClass]="cell.value.class"></span>
+                <span style="vertical-align: middle">{{cell.value.type}}</span>
+              </div>
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager [visible]="true"
+                         [allowedPageSizes]="gridsettings.allowedPageSizes"
+                         [displayMode]="gridsettings.displayMode"
+                         [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                         [showInfo]="gridsettings.showInfo"
+                         [showNavigationButtons]="gridsettings.showNavButtons">
+              </dxo-pager>
+              <dxo-selection mode="multiple"
+                             selectAllMode="page">
+              </dxo-selection>
+            </dx-data-grid>
+          </div>
+           
+        </div>
+    </div>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+      elementAttr:gridsettings.finishclass,
+        onClick: hide,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

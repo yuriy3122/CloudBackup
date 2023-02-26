@@ -1,0 +1,13 @@
+<div class="page-tabs">
+  <ul class="nav nav-tabs">
+    <li *ngFor="let route of currentRoute?.data?.children?.filter(checkRoutePermissions);" [routerLinkActive]="['active']">
+      <a href="#default"
+         (click)="setActiveTab(route)"
+         [routerLink]="menu.treelink ? [route?.path, menu.treelink] : route?.path"
+         data-toggle="tab"
+         >
+        {{route.data?.title}}
+      </a>
+    </li>
+  </ul>
+</div>

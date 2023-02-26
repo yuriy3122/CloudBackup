@@ -1,0 +1,20 @@
+<dx-popup [visible]="popupVisible" width="600" height="'auto'" [title]="title" (onShowing)="onShowing()"
+    (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="dialog" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let data of 'content'">
+        <p>Popup content</p>
+        <dx-number-box [(value)]="value"></dx-number-box>
+        <dx-text-box [(value)]="valueString"></dx-text-box>
+    </div>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="before" [options]="{
+            text: 'Close',
+                        elementAttr:gridsettings.finishclass,
+            onClick: close
+        }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Complete',
+                        elementAttr:gridsettings.cancelclass,
+        onClick: complete
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

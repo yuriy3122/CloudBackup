@@ -1,0 +1,383 @@
+<dx-popup [visible]="popupVisible" width="900" height="590" [title]="title" (onShowing)="onShow()"
+          (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true" class="wizard" [copyRootClassesToWrapper]="true">
+  <div *dxTemplate="let t = data of 'content'">
+    <div class="wizard-wrapper popup">
+      <div class="wizard-wrapper-title">
+        <span class="wizard-wrapper-description">{{steps[stepIndex].Description}}</span>
+        <span class="wizard-wrapper-sub-description">{{steps[stepIndex].SubDescription}}</span>
+        <job-cost class="inline-block right" [backupJob]="backupJobForCost"></job-cost>
+      </div>
+      <table class="wizard-table">
+        <tr>
+          <td class="first-column">
+            <ul class="wizard-wrapper-menu">
+              <li *ngFor="let step of steps; let i = index;" (click)="setStepIndex(i)"
+                  [ngClass]="i == stepIndex? 'active': ''">
+                <span class="menu-text">{{step.Title}}</span>
+            </ul>
+          </td>
+
+          <td class="second-column">
+            <div [ngClass]="stepIndex !== 0? 'hide': ''" class="wizard-step step1">
+              <div class="wizard-step-content">
+                <table class="simple-table short-td width100">
+                  <tr>
+                    <td class="width20">
+                      Job Name:
+                    </td>
+                    <td class="width80">
+                      <dx-text-box [(value)]="backupJob.Name"
+                                   [isValid]="backupJob.isNameValid || steps[0].IsValid"></dx-text-box>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Tenant:
+                    </td>
+                    <td>
+                      <dx-select-box class="short" [disabled]="tenants.length < 2"
+                                     [dataSource]="tenants" [(value)]="backupJob.TenantId"
+                                     (onValueChanged)="onTenantValueChanged($event)"
+                                     [isValid]="backupJob.TenantId > 0 || steps[0].IsValid"
+                                     displayExpr="Name" valueExpr="Id">
+                      </dx-select-box>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Description:
+                      <br />
+                      <dx-text-area [(value)]="backupJob.Description"></dx-text-area>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div [ngClass]="stepIndex !== 1? 'hide': ''" class="wizard-step step2 tabs-scroll-wrapper">
+              <dx-tabs [scrollByContent]="true" [showNavButtons]="true" [dataSource]="jobObjectTabs"
+                       [(selectedItem)]="selectedJobObjectTab">
+              </dx-tabs>
+              <div [ngClass]="selectedJobObjectTab.id !== 0 ? 'hide': ''">
+                <div class="wizard-step-content">
+                  <div class="toolbar">
+                    <div class="icon-bar">
+                      <div class="button primary center create" (click)="showSelectInstancesPopup()">
+                        <span>Add</span>
+                      </div>
+                      <div class="button secondary delete margin-left10"
+                           *ngIf="selectedInstances.length > 0"
+                           (click)="deleteInstance()">
+                        <span>Delete</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <dx-data-grid #instancesGrid id="instances-grid" class="colored" style="min-height: 240px;"
+                                  updateDimensionsOnVisible [dataSource]="instances" width="100%"
+                                  [columns]="instanceColumns"
+                                  [(selectedRowKeys)]="selectedInstances"
+                                  [paging]="{ pageSize:5 }" [pager]="{ showPageSizeSelector: false }"
+                                  (onRowClick)="onInstanceRowClick($event)">
+                      <dxo-paging [pageSize]="10"> </dxo-paging>
+                      <dxo-pager [visible]="true"
+                                 [allowedPageSizes]="gridsettings.allowedPageSizes"
+                                 [displayMode]="gridsettings.displayMode"
+                                 [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                                 [showInfo]="gridsettings.showInfo"
+                                 [showNavigationButtons]="gridsettings.showNavButtons">
+                      </dxo-pager>
+                      <dxo-selection mode="multiple"
+                                     selectAllMode="page">
+                        <!-- or "allPages" -->
+                      </dxo-selection>
+                    </dx-data-grid>
+                  </div>
+                </div>
+              </div>
+              <div [ngClass]="selectedJobObjectTab.id !== 1 ? 'hide': ''">
+                <div class="wizard-step-content">
+                  <div class="toolbar">
+                    <div class="icon-bar">
+                      <div class="button primary center create" (click)="showSelectDisksPopup()">
+                        <span>Add</span>
+                      </div>
+                      <div class="button secondary delete  margin-left10" (click)="deleteDisk()"
+                           *ngIf="selectedDisks.length > 0">
+                        <span>Delete</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <dx-data-grid #disksGrid id="disks-grid" class="colored"
+                                  (onRowClick)="onDiskRowClick($event)" updateDimensionsOnVisible
+                                  [dataSource]="disks" width="100%" [(selectedRowKeys)]="selectedDisks"
+                                  [columns]="diskColumns" [paging]="{ pageSize:5 }"
+                                  [pager]="{ showPageSizeSelector: false }">
+                      <dxo-paging [pageSize]="10"> </dxo-paging>
+                      <dxo-pager [visible]="true"
+                                 [allowedPageSizes]="gridsettings.allowedPageSizes"
+                                 [displayMode]="gridsettings.displayMode"
+                                 [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                                 [showInfo]="gridsettings.showInfo"
+                                 [showNavigationButtons]="gridsettings.showNavButtons">
+                      </dxo-pager>
+                      <dxo-selection mode="multiple"
+                                     selectAllMode="page">
+                        <!-- or "allPages" -->
+                      </dxo-selection>
+                    </dx-data-grid>
+                  </div>
+                </div>
+              </div>
+              <div [ngClass]="{'hide': stepIndex !== 1 || steps[1].IsValid}">
+                <span class="red margin-left30">
+                  At least one of the instances/disks must be
+                  selected.
+                </span>
+              </div>
+            </div>
+            <div [ngClass]="{'hide': stepIndex !== 2}" class="wizard-step step3">
+              <div class="wizard-step-content">
+                <table class="simple-table standard table-middle" style="width: auto">
+                  <colgroup>
+                    <!--These columns are aligned with columns in job-schedule-editor.
+                        Please consider this when changing them.-->
+                    <col style="width: 180px" />
+                    <col style="width: 135px" />
+                    <col style="width: 205px" />
+                    <col style="width: 190px" />
+                  </colgroup>
+                  <tr style="height: 46px">
+                    <td>
+                      <input id="immediately" class="radio-button" type="radio" name="startupType"
+                             [checked]="startupType === StartupType.Immediately"
+                             (change)="setStartupType(StartupType.Immediately)" />
+                      <label for="immediately" class="input-label">Run job immediately</label>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <input id="delayed" class="radio-button" name="startupType" type="radio"
+                             [checked]="startupType === StartupType.Delayed"
+                             (change)="setStartupType(StartupType.Delayed)" />
+                      <label for="delayed" class="input-label">Delayed run at</label>
+                    </td>
+                    <td>
+                      <dx-date-box type="time" [disabled]="startupType !== StartupType.Delayed"
+                                   [(value)]="delayedRunTime" (onValueChanged)="onScheduleParamsChanged()"
+                                   [isValid]="isDelayedRunTimeValid || steps[2].IsValid">
+                      </dx-date-box>
+                    </td>
+                    <td>
+                      <dx-date-box type="date" [disabled]="startupType !== StartupType.Delayed"
+                                   [(value)]="delayedRunTime" (onValueChanged)="onScheduleParamsChanged()">
+                      </dx-date-box>
+                    </td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <input id="recurrent" class="radio-button" name="startupType" type="radio"
+                             [checked]="startupType === StartupType.Recurring"
+                             (change)="setStartupType(StartupType.Recurring)" />
+                      <label for="recurrent" class="input-label">Recurrent job</label>
+                    </td>
+                    <td colspan="2">
+                      <table class="simple-table width100">
+                        <tr>
+                          <td style="padding: 0; padding-right: 10px">
+                            <span>Schedule:</span>
+                          </td>
+                          <td style="padding: 0">
+                            <dx-select-box [disabled]="startupType !== StartupType.Recurring"
+                                           [dataSource]="recurrentSchedules" displayExpr="Name"
+                                           valueExpr="Id" [(value)]="scheduleId"
+                                           (onValueChanged)="onSelectedScheduleChanged($event)">
+                            </dx-select-box>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4" style="padding: 0;">
+                      <job-schedule-editor #scheduleEditor
+                                           [disabled]="startupType !== StartupType.Recurring"
+                                           [(schedule)]="recurrentScheduleToEdit"
+                                           (scheduleChange)="onScheduleParamsChanged()"
+                                           [scheduleChangeExpectsValidate]="false"
+                                           [showValidation]="startupType === StartupType.Recurring && showRecurrentScheduleValidation"
+                                           (isValidChange)="isRecurrentScheduleValid = $event">
+                      </job-schedule-editor>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div [ngClass]="{'hide': stepIndex !== 3}" class="wizard-step step3">
+              <div class="wizard-step-content">
+                <table class="simple-table standard table-middle margin-top10">
+                  <tr>
+                    <td colspan="5" class="light-gray-text">
+                      <span>RETENTION POLICY</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span>Retention mode:</span>
+                    </td>
+                    <td>
+                      <dx-select-box class="inline-block short"
+                                     width="323"
+                                     [dataSource]="retentionActions"
+                                     [disabled]="!canSelectRetentionMode"
+                                     displayExpr="text"
+                                     valueExpr="id"
+                                     [(value)]="retentionAction"
+                                     (onValueChanged)="requestCostUpdate()">
+                      </dx-select-box>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span>Keeps backups for:</span>
+                    </td>
+                    <td>
+                      <dx-number-box class="inline-block short-number-box"
+                                     [showSpinButtons]="true"
+                                     [min]="1" [max]="1000"
+                                     [(value)]="retentionTimeIntervalValue"
+                                     (onValueChanged)="requestCostUpdate()">
+                      </dx-number-box>
+                      <dx-select-box class="inline-block short margin-left10"
+                                     width="100"
+                                     [dataSource]="retentionTimeIntervalTypes"
+                                     displayExpr="text"
+                                     valueExpr="id"
+                                     [(value)]="retentionTimeIntervalType"
+                                     (onValueChanged)="requestCostUpdate()">
+                      </dx-select-box>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span>Restore points to keep:</span>
+                    </td>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="padding:0px">
+                            <dx-number-box class="inline-block short-number-box"
+                                           [showSpinButtons]="true"
+                                           [min]="1" [max]="1000"
+                                           [(value)]="restorePointsToKeep"
+                                           (onValueChanged)="requestCostUpdate()">
+                            </dx-number-box>
+                          </td>
+                          <td style="padding-left:5px; padding-top:0px; padding-bottom:5px">
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div [ngClass]="{'hide': stepIndex !== 4}" class="wizard-step step3">
+              <div class="wizard-step-content">
+                <table class="simple-table standard table-middle margin-top10">
+                  <tr>
+                    <td class="light-gray-text" style="width:120px">
+                      <span>Job Name:</span>
+                    </td>
+                    <td>
+                      {{backupJob.Name}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="light-gray-text" style="width:120px">
+                      <span>Description:</span>
+                    </td>
+                    <td>
+                      {{backupJob.Description}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="light-gray-text" style="width:120px">
+                      <span>Job Type:</span>
+                    </td>
+                    <td>
+                      Backup
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="light-gray-text" style="vertical-align:top; width:130px">
+                      <span>Selected Objects:</span>
+                    </td>
+                    <td>
+                      <items-list-block [items]="selectedObjects"></items-list-block>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <dxi-toolbar-item *ngIf="stepIndex != 0" widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Back',
+        class: 'button secondary back',
+        elementAttr:gridsettings.backclass,
+        onClick: prevStep,
+        focusStateEnabled: false
+    }">
+  </dxi-toolbar-item>
+  <dxi-toolbar-item *ngIf="stepIndex != steps.length - 1" widget="dxButton" [toolbar]="'bottom'" location="after"
+                    [options]="{
+        text: 'Next',
+        class: 'button secondary next',
+        elementAttr:gridsettings.nextclass,
+        onClick: nextStep,
+        focusStateEnabled: false
+    }">
+  </dxi-toolbar-item>
+  <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Finish',
+        class: 'button primary no-background',
+        elementAttr:gridsettings.finishclass,
+        onClick: onComplete,
+        focusStateEnabled: false
+    }">
+  </dxi-toolbar-item>
+  <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+        class: 'button secondary no-background',
+        elementAttr:gridsettings.cancelclass,
+        onClick: hide,
+        focusStateEnabled: false
+    }">
+  </dxi-toolbar-item>
+</dx-popup>
+
+<select-instances-wizard [(popupVisible)]="selectInstancesPopupVisible" [selectedInstances]="instances"
+    [wizardGuid]="guid" [tenantId]="backupJob.TenantId" (onSelectedInstance)="onSelectedInstance($event); onJobObjectsChanged()">
+</select-instances-wizard>
+
+<select-disks-wizard [(popupVisible)]="selectDisksPopupVisible" [selectedDisks]="disks"
+    (onSelectedDisks)="onSelectedDisk($event); onJobObjectsChanged()" [wizardGuid]="guid" [tenantId]="backupJob.TenantId">
+</select-disks-wizard>

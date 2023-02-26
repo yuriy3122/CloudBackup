@@ -1,0 +1,8 @@
+﻿<div #filterButtonContainer class="filter-button-container position-relative">
+     <div class="filter-button-border position-absolute" [ngClass]="{ active: filterVisible }"
+          [ngStyle]="{ height: 'calc(100% + ' + (offset || 0) + 'px)', 'margin-bottom': -offset + 'px'}">
+     </div>
+     <div #filterButton class="filter-button align-middle position-relative"
+          [ngClass]="filterVisible ? 'icon-close hover' : 'icon-filter'" (click)="changeVisible()">
+     </div>
+</div>

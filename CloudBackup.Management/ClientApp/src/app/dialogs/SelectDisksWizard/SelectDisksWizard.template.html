@@ -1,0 +1,84 @@
+<dx-popup id="SelectDisksPopup" 
+          [visible]="popupVisible" 
+          width="880" height="auto" 
+          title="Add disk" 
+          (onShowing)="onShow()" (onHiding)="onHiding()" 
+          [dragEnabled]="false" 
+          [showCloseButton]="true"
+            class="dialog" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="popup wizard-step-content">
+            <div class="toolbar line-height-normal">
+                <dx-text-box id="select-disks-search"
+                             class="search-input"
+                             mode="search"
+                             (onValueChanged)="onSearchValueChanged($event)"
+                             valueChangeEvent="change input">
+                </dx-text-box>
+                <div class="select-title">Cloud:</div>
+                <dx-select-box id="select-instance-clouds-combo"
+                               class="search-input"
+                               [dataSource]="clouds"
+                               [(value)]="selectedCloud"
+                               displayExpr="name"
+                               valueExpr="id"
+                               width="200"
+                               (onValueChanged)="onCloudChanged()">
+                </dx-select-box>
+                <div class="select-title">Folder:</div>
+                <dx-select-box id="select-instance-folders-combo"
+                               class="search-input"
+                               [dataSource]="folders"
+                               [(value)]="selectedFolderId"
+                               displayExpr="name"
+                               valueExpr="id"
+                               width="200"
+                               [disabled]="selectedCloud == null"
+                               (onValueChanged)="onValueChanged()">
+                </dx-select-box>
+            </div>
+            <dx-data-grid id="select-disks-grid"
+                          class="colored"
+                          [dataSource]="disks"
+                          [columns]="columns"
+                          [(selectedRowKeys)]="selectedKeys"
+                          width="100%"
+                          [customizeColumns]="customizeColumns"
+                          [paging]="{ pageSize:10 }"
+                          [pager]="{ showPageSizeSelector: false }"
+                          (onSelectionChanged)="onSelectionChanged($event)"
+                          (onContentReady)="repaintPopup()"
+                          (onRowClick)="onRowClick($event)"
+                          [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }">
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager [visible]="true"
+                         [allowedPageSizes]="gridsettings.allowedPageSizes"
+                         [displayMode]="gridsettings.displayMode"
+                         [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                         [showInfo]="gridsettings.showInfo"
+                         [showNavigationButtons]="gridsettings.showNavButtons">
+              </dxo-pager>
+              <dxo-selection mode="multiple"
+                             selectAllMode="page">
+                <!-- or "allPages" -->
+              </dxo-selection>
+            </dx-data-grid>
+        </div>
+    </div>
+    
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Add',
+        elementAttr:gridsettings.finishclass,
+        onClick: ok,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+        elementAttr:gridsettings.cancelclass,
+        onClick: hide,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    
+</dx-popup>

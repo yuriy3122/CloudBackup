@@ -1,0 +1,115 @@
+@import 'constants.scss';
+
+.dx-toolbar-button {
+    line-height: 40px;
+}
+
+dx-button,
+daily-intervals-selector .stretch-height .button {
+    &.secondary {
+        &.dx-state-disabled {
+            opacity: 0.5;
+        }
+    }
+}
+
+.dx-datagrid-pager {
+    .dx-page-sizes {
+        float: right !important;
+    }
+
+    .dx-pages {
+        float: left !important;
+    }
+}
+
+.dx-datagrid .dx-column-lines>td {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.dx-header-row>td>.dx-datagrid-text-content {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: SourceSansPro-Bold;
+    font-size: 14px;
+}
+
+.dx-datagrid-content .dx-datagrid-table .dx-row>td,
+.dx-datagrid-content .dx-datagrid-table .dx-row>tr>td {
+    color: var(--text-primary);
+    font-weight: 400;
+    font-size: 14px
+}
+
+.dx-datagrid-content .dx-datagrid-table .dx-row {
+    height: 31px;
+    border-bottom: 1px solid var(--border-color-table);
+
+    &.dx-selection {
+        background: var(--bg-menu-hover);
+    }
+}
+
+.dx-datagrid-rowsview {
+  .dx-datagrid-content .dx-datagrid-table .dx-row:not(.dx-freespace-row) {
+    &:hover {
+      background: var(--bg-menu-hover);
+    }
+  }
+
+  .dx-select-checkboxes-hidden > tbody > tr > td > .dx-select-checkbox {
+    display: inline-block;
+    border: none;
+
+    .dx-checkbox-icon {
+      border: 1px solid var(--border-color-table);
+      border-radius: 3px;
+    }
+  }
+}
+
+.dx-popup-content {
+    padding: 0;
+}
+
+
+.dx-menu-base .dx-menu-item-content {
+    padding: 0px;
+}
+
+
+.dx-tabs {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 14px;
+
+    .dx-tab-selected::after {
+        border: none;
+    }
+
+    &.dx-tabs-expanded {
+        display: inline-block;
+    }
+
+    /*.dx-tabs-wrapper {
+      display: block;
+    }*/
+
+    .dx-tab {
+        display: inline-block;
+        opacity: 0.5;
+        margin-right: 30px;
+        background-color: inherit;
+        padding: 8px 0;
+
+        &.dx-tab.dx-tab-selected {
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--text-primary);
+            opacity: 1;
+            border-bottom: 1px solid var(--link-primary);
+        }
+    }
+}

@@ -1,0 +1,210 @@
+<dx-popup [visible]="popupVisible" width="880" height="600" [title]="title" (onShowing)="onShow()"
+    (onHiding)="onHiding()" [dragEnabled]="false" [showCloseButton]="true"  class="wizard" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="wizard-wrapper popup">
+            <div class="wizard-wrapper-title">
+                <span class="wizard-wrapper-description">{{steps[stepIndex].Description}}</span>
+                <span class="wizard-wrapper-sub-description">{{steps[stepIndex].SubDescription}}</span>
+            </div>
+            <table class="wizard-table">
+                <tr>
+                    <td class="first-column">
+                        <ul class="wizard-wrapper-menu">
+                            <li *ngFor="let step of steps; let i = index;" (click)="setStepIndex(i)"
+                                [ngClass]="i == stepIndex? 'active': ''">
+                                <span class="menu-text">{{step.Title}}</span>
+                        </ul>
+                    </td>
+                    <td class="second-column">
+                        <div [ngClass]="stepIndex != 0? 'hide': ''" class="wizard-step step1">
+                          <div class="wizard-step-content">
+                            <table class="simple-table short-td width100">
+                              <tr>
+                                <td class="width20">
+                                  Configuration Name:
+                                </td>
+                                <td class="width80">
+                                  <dx-text-box [(value)]="notificationConfig.Name"
+                                               [isValid]="notificationConfig.isNameValid || steps[0].IsValid">
+                                  </dx-text-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Tenant:
+                                </td>
+                                <td>
+                                  <dx-select-box class="toolbar-item" [disabled]="!canSelectTenants"
+                                                 [dataSource]="tenants" [(value)]="selectedTenantId"
+                                                 (onValueChanged)="onTenantValueChanged($event)" displayExpr="Name"
+                                                 valueExpr="Id" width="200">
+                                  </dx-select-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                </td>
+                                <td>
+                                  <dx-check-box [(value)]="includeTenants" text="Include Tenants">
+                                  </dx-check-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span>Notification type:</span>
+                                </td>
+                                <td>
+                                  <dx-select-box class="inline-block short"
+                                                 width="318"
+                                                 [dataSource]="notificationTypes"
+                                                 displayExpr="text"
+                                                 valueExpr="id"
+                                                 [(value)]="notificationConfig.Type">
+                                  </dx-select-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span>Delivery method:</span>
+                                </td>
+                                <td>
+                                  <dx-select-box class="inline-block short"
+                                                 width="318"
+                                                 [dataSource]="deliveryMethods"
+                                                 displayExpr="text"
+                                                 valueExpr="id"
+                                                 [disabled]="true"
+                                                 [(value)]="deliveryMethod">
+                                  </dx-select-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Send To Email:
+                                </td>
+                                <td>
+                                  <dx-text-box [(value)]="notificationConfig.Email"
+                                               [validationError]="{ message: errorEmail}"
+                                               [isValid]="notificationConfig.isEmailValid || steps[0].IsValid">
+
+                                  </dx-text-box>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                        <div [ngClass]="stepIndex != 1? 'hide': ''" class="wizard-step step2">
+                          <div class="wizard-step-content">
+                            <table class="simple-table short-td width100">
+                              <tr>
+                                <td class="width20">
+                                  Delivery:
+                                </td>
+                                <td class="width80">
+                                  <dx-select-box [dataSource]="deliveryConfigurations" displayExpr="Name"
+                                                 valueExpr="Id" [(value)]="deliveryConfigurationId"
+                                                 (onValueChanged)="onSelectedDeliveryConfigurationChanged($event)">
+                                  </dx-select-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Delivery Name:
+                                </td>
+                                <td>
+                                  <dx-text-box [(value)]="deliveryName"
+                                               [isValid]="!errors.has(DeliveryInputType.deliveryName)"
+                                               [validationError]="{ message: errors.get(DeliveryInputType.deliveryName)}"
+                                               (onValueChanged)="onValueChanged(DeliveryInputType.deliveryName)"></dx-text-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Sender Email:
+                                </td>
+                                <td>
+                                  <dx-text-box [(value)]="senderEmail" [isValid]="!errors.has(DeliveryInputType.senderEmail)"
+                                               [validationError]="{ message: errors.get(DeliveryInputType.senderEmail)}"
+                                               (onValueChanged)="onValueChanged(DeliveryInputType.senderEmail)"></dx-text-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  SMTP Server:
+                                </td>
+                                <td>
+                                  <dx-text-box [(value)]="emailSmtpServer" [isValid]="!errors.has(DeliveryInputType.emailSmtpServer)"
+                                               [validationError]="{ message: errors.get(DeliveryInputType.emailSmtpServer)}"
+                                               (onValueChanged)="onValueChanged(DeliveryInputType.emailSmtpServer)"></dx-text-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  SMTP Port:
+                                </td>
+                                <td>
+                                  <dx-number-box class="inline-block short-number-box"
+                                                 [showSpinButtons]="true"
+                                                 [min]="0" [max]="65536"
+                                                 [(value)]="emailSmtpPort">
+                                  </dx-number-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  User Name:
+                                </td>
+                                <td>
+                                  <dx-text-box [(value)]="emailSmtpUserName" [isValid]="!errors.has(DeliveryInputType.emailSmtpUserName)"
+                                               [validationError]="{ message: errors.get(DeliveryInputType.emailSmtpUserName)}"
+                                               (onValueChanged)="onValueChanged(DeliveryInputType.emailSmtpUserName)"></dx-text-box>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  Password:
+                                </td>
+                                <td>
+                                  <dx-text-box mode="password" [(value)]="emailSmtpUserPassword" [isValid]="!errors.has(DeliveryInputType.emailSmtpUserPassword)"
+                                               [validationError]="{ message: errors.get(DeliveryInputType.emailSmtpUserPassword)}"
+                                               (onValueChanged)="onValueChanged(DeliveryInputType.emailSmtpUserPassword)"></dx-text-box>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <dxi-toolbar-item *ngIf="stepIndex != 0" widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Back',
+         elementAttr:gridsettings.backclass,
+        onClick: prevStep,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item *ngIf="stepIndex != steps.length - 1" widget="dxButton" [toolbar]="'bottom'" location="after"
+        [options]="{
+        text: 'Next',
+         elementAttr:gridsettings.nextclass,
+        onClick: nextStep,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Finish',
+        elementAttr:gridsettings.finishclass,
+        onClick: onComplete,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Cancel',
+        elementAttr:gridsettings.cancelclass,
+        onClick: onHiding,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

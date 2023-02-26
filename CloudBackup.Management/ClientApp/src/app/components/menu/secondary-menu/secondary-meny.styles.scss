@@ -1,0 +1,14 @@
+.panel {
+    .panel-heading {
+        .nav.nav-tabs {
+            border: none;
+            li {
+                margin-right: 10px;
+
+                &.active {
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}

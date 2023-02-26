@@ -1,0 +1,35 @@
+@import 'constants.scss';
+
+.button {
+    height: 40px;
+    padding: 0 10px 0 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    color: var(--text-button);
+    background-color: var(--bg-button);
+    font-weight: 600;
+    font-size: 14px;
+    
+    span {
+        font-family: SourceSansPro-Bold;
+      }
+
+    &:hover{
+        background-color: var(--bg-button-hover);
+    }
+
+    &.secondary {
+        color: var(--text-button-secondary);
+        background-color: var(--bg-button-secondary);
+
+        span {
+            font-family: SourceSansPro-Bold;
+            background-size: 12px auto;
+          }
+
+        &:hover{
+            background-color: var(--bg-button-hover-secondary);
+        }
+    }
+}

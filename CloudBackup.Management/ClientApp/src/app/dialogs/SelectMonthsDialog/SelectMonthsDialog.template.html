@@ -1,0 +1,70 @@
+<dx-popup id="SelectMonthsPopup" [visible]="popupVisible" width="270" height="auto" [title]="'Choose Months'" (onShowing)="onShow()" (onHiding)="onHiding()" [dragEnabled]="false"
+          [showCloseButton]="true"  class="dialog" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="popup wizard-step-content">
+            <table class="simple-table short-td">
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="months[0]" text="January"></dx-check-box>
+                    </td>
+                    <td width="30"></td>
+                    <td>
+                        <dx-check-box [(value)]="months[6]" text="July"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="months[1]" text="February"></dx-check-box>
+                    </td>
+                    <td width="30"></td>
+                    <td>
+                        <dx-check-box [(value)]="months[7]" text="August"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="months[2]" text="March"></dx-check-box>
+                    </td>
+                    <td width="30"></td>
+                    <td>
+                        <dx-check-box [(value)]="months[8]" text="September"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="months[3]" text="April"></dx-check-box>
+                    </td>
+                    <td width="30"></td>
+                    <td>
+                        <dx-check-box [(value)]="months[9]" text="October"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="months[4]" text="May"></dx-check-box>
+                    </td>
+                    <td width="30"></td>
+                    <td>
+                        <dx-check-box [(value)]="months[10]" text="November"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="months[5]" text="June"></dx-check-box>
+                    </td>
+                    <td width="30"></td>
+                    <td>
+                        <dx-check-box [(value)]="months[11]" text="December"></dx-check-box>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+        elementAttr:gridsettings.finishclass,
+        onClick: ok,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

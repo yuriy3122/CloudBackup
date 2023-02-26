@@ -1,0 +1,53 @@
+<dx-popup id="SelectDaysPopup" [visible]="popupVisible" width="270" height="'auto'" [title]="'Choose Days'" (onShowing)="onShow()" (onHiding)="onHiding()"
+          [dragEnabled]="false" [showCloseButton]="true"  class="dialog" [copyRootClassesToWrapper]="true">
+    <div *dxTemplate="let t = data of 'content'">
+        <div class="popup wizard-step-content">
+            <table class="simple-table short-td">
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="days[1]" text="Monday"></dx-check-box>
+                    </td>
+                    <td>
+                        <dx-check-box [(value)]="days[6]" text="Saturday"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="days[2]" text="Tuesday"></dx-check-box>
+                    </td>
+                    <td>
+                        <dx-check-box [(value)]="days[0]" text="Sunday"></dx-check-box>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="days[3]" text="Wednesday"></dx-check-box>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="days[4]" text="Thursday"></dx-check-box>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <dx-check-box [(value)]="days[5]" text="Friday"></dx-check-box>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <dxi-toolbar-item widget="dxButton" [toolbar]="'bottom'" location="after" [options]="{
+        text: 'Ok',
+        elementAttr:gridsettings.finishclass,
+        onClick: ok,
+        focusStateEnabled: false
+    }">
+    </dxi-toolbar-item>
+</dx-popup>

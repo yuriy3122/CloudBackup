@@ -1,0 +1,116 @@
+<div class="wrapper">
+    <div class="toolbar nowrap">
+        <dx-text-box id="backup-instances-search" class="search-input" mode="search" valueChangeEvent="change input"
+            (onValueChanged)="onSearchValueChanged($event)">
+        </dx-text-box>
+        <div class="select-title">Cloud:</div>
+        <dx-select-box id="select-instance-clouds-combo" class="search-input" [dataSource]="clouds"
+            [(value)]="selectedCloud" displayExpr="name" valueExpr="id" width="200" (onValueChanged)="onCloudChanged()">
+        </dx-select-box>
+        <div class="select-title">Folder:</div>
+        <dx-select-box id="select-instance-folders-combo" class="search-input" [dataSource]="folders"
+            [(value)]="selectedFolderId" displayExpr="name" valueExpr="id" width="200"
+            [disabled]="selectedCloud == null" (onValueChanged)="onValueChanged()">
+        </dx-select-box>
+        <div class="icon-bar">
+            <div id="instanceActions" class="button primary combo shrink1024"
+                [ngClass]="{'hide': selectedRows.length === 0 || (!canBackup && !canEdit)}" (click)="showActions()">
+                <span>Actions</span>
+            </div>
+        </div>
+
+        <!-- <toolbar-filter class="margin-left5" [filterPanel]="filterPanel" [(filterVisible)]="filterVisible">
+        </toolbar-filter> -->
+    </div>
+
+    <!-- <div #filterPanel class="toolbar">
+        <div class="toolbar-item">
+            <span>State:</span>
+            <dx-select-box class="inline-block align-middle margin-left5" width="150" placeholder="Select..."
+                [showClearButton]="true" [items]="instanceStates" [(value)]="filter.state"
+                (onValueChanged)="onFilterValueChanged()">
+            </dx-select-box>
+        </div>
+        <div class="toolbar-item">
+            <span>Platform:</span>
+            <dx-select-box class="inline-block align-middle margin-left5" width="150" placeholder="Select..."
+                [showClearButton]="true" [items]="['Linux', 'Windows']" [(value)]="filter.platform"
+                (onValueChanged)="onFilterValueChanged()">
+            </dx-select-box>
+        </div>
+        <div class="toolbar-item">
+            <span>Protected:</span>
+            <dx-select-box class="inline-block align-middle margin-left5" width="100" placeholder="Select..."
+                displayExpr="name" valueExpr="value" [showClearButton]="true"
+                [items]="[{name: 'Yes', value: true}, {name: 'No', value: false}]" [(value)]="filter.hasBackups"
+                (onValueChanged)="onFilterValueChanged()">
+            </dx-select-box>
+        </div>
+    </div>
+     -->
+    <dx-popover target="#instanceActions" position="bottom" [width]="200" [(visible)]="actionsVisible">
+        <div class="toolbar management" *dxTemplate="let data of 'content'">
+            <div class="icon-bar management">
+                <div class="icon create-backup" [ngClass]="{'hide': !canBackup}" (click)="addToBackupJob()">
+                    <span>Add to backup job</span>
+                </div>
+                <div class="icon resume" [ngClass]="{'hide': !canStartInstances}" (click)="startInstances()">
+                    <span>Start</span>
+                </div>
+                <div class="icon stop" [ngClass]="{'hide': !canStopInstances}" (click)="stopInstances()">
+                    <span>Stop</span>
+                </div>
+                <div class="icon retry" [ngClass]="{'hide': !canRebootInstances}" (click)="rebootInstances()">
+                    <span>Reboot</span>
+                </div>
+                <div class="icon delete" [ngClass]="{'hide': !canTerminateInstances}" (click)="terminateInstances()">
+                    <span>Terminate</span>
+                </div>
+            </div>
+        </div>
+    </dx-popover>
+    <div class="content-wrapper">
+      <dx-data-grid #backupInstancesGrid id="backup-instances-grid" class="colored" selectRowOnClick
+                    [dataSource]="instancesDataSource" [columns]="columns" width="100%" [customizeColumns]="customizeColumns"
+                    (onContextMenuPreparing)="onContextMenuPreparing($event)" [(selectedRowKeys)]="selectedRows"
+                    (onSelectionChanged)="onSelectionChanged()"
+                    [remoteOperations]="{ filtering: true, sorting: true, paging: true, grouping: true, summary: true }"
+                    [stateStoring]="{ enabled: true, storageKey: storageKey, type: 'custom', customLoad: customLoad, customSave: customSave }">
+        <!-- <div *dxTemplate="let cellData of 'cellTemplate'">
+      <a [routerLink]="['/' + childPath, cellData.data.instanceId]" (click)="setMenu()">{{cellData.value}}</a>
+  </div> -->
+        <div *dxTemplate="let item of 'contextMenuItemTemplate'">
+          <div class="icon-bar management">
+            <div class="icon" [ngClass]="item.icon">
+              <span>{{item?.text}}</span>
+            </div>
+          </div>
+        </div>
+        <dxo-paging [pageSize]="10"> </dxo-paging>
+        <dxo-pager [visible]="true"
+                   [allowedPageSizes]="gridsettings.allowedPageSizes"
+                   [displayMode]="gridsettings.displayMode"
+                   [showPageSizeSelector]="gridsettings.showPageSizeSelector"
+                   [showInfo]="gridsettings.showInfo"
+                   [showNavigationButtons]="gridsettings.showNavButtons">
+        </dxo-pager>
+        <dxo-selection mode="multiple"
+                       selectAllMode="page">
+          <!-- or "allPages" -->
+        </dxo-selection>
+      </dx-data-grid>
+    </div>
+
+    <!-- <rename-instance-dialog [(instance)]="instance"
+                            [(popupVisible)]="popupShow"
+                            id="rename-instance-dialog"
+                            (instanceChange)="update()">
+    </rename-instance-dialog> -->
+
+    <add-edit-backup-job-wizard *ngIf="canBackup" id="add-backup-job-from-instance-wizard"
+        [(popupVisible)]="createJobPopupVisible" [(backupJob)]="backupJobToCreate"
+        (complete)="onBackupJobCreated($event)">
+    </add-edit-backup-job-wizard>
+
+    <!--<router-outlet></router-outlet>-->
+</div>

@@ -1,0 +1,184 @@
+<table class="simple-table width100">
+    <colgroup>
+        <col style="width:180px" />
+        <col style="width:135px" />
+        <col style="width:230px" />
+        <col style="width:145px" />
+        <col style="width:30px" />
+    </colgroup>
+    <tr>
+        <td>
+            <span>Schedule name:</span>
+        </td>
+        <td colspan="2">
+            <dx-text-box [disabled]="disabled"
+                         [(value)]="scheduleName"
+                         [isValid]="!showValidation || isScheduleNameValid"
+                         (onValueChanged)="onParamsChanged()"
+                         valueChangeEvent="change input">
+            </dx-text-box>
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="radio-cell">
+            <input id="recurrent1"
+                   class="radio-button"
+                   type="radio"
+                   name="occurType"
+                   [disabled]="disabled"
+                   [checked]="occurType === OccurType.Periodically"
+                   (change)="setOccurType(OccurType.Periodically)" />
+            <label for="recurrent1" class="input-label">Periodically every</label>
+        </td>
+        <td>
+            <dx-number-box [disabled]="disabled || occurType !== OccurType.Periodically"
+                           [showSpinButtons]="true"
+                           [(value)]="timeIntervalValue"
+                           [min]="1"
+                           [max]="10000"
+                           [isValid]="!showValidation || !timeIntervalError"
+                           [validationError]="{ message: timeIntervalError}"
+                           (onValueChanged)="onParamsChanged()">
+            </dx-number-box>
+        </td>
+        <td>
+            <dx-select-box [disabled]="disabled || occurType !== OccurType.Periodically"
+                           [dataSource]="periods"
+                           valueExpr="id"
+                           displayExpr="text"
+                           [(value)]="timeIntervalType"
+                           (onValueChanged)="onParamsChanged()">
+            </dx-select-box>
+        </td>
+        <td>
+            <dx-button class="secondary button width150"
+                       [disabled]="disabled || occurType !== OccurType.Periodically"
+                       text="Periods"
+                       (click)="showDailyIntervalsPopup()">
+            </dx-button>
+        </td>
+    </tr>
+    <tr>
+      <td class="radio-cell">
+        <input id="recurrent2"
+               class="radio-button"
+               type="radio"
+               name="occurType"
+               [disabled]="disabled"
+               [checked]="occurType === OccurType.Daily"
+               (change)="setOccurType(OccurType.Daily)" />
+        <label for="recurrent2" class="input-label">Daily every</label>
+      </td>
+        <td>
+            <dx-date-box width="100%"
+                         type="time"
+                         [disabled]="disabled || occurType !== OccurType.Daily"
+                         [(value)]="dailyRunTime"
+                         [isValid]="!showValidation || isDailyRunTimeValid"
+                         (onValueChanged)="onParamsChanged()">
+            </dx-date-box>
+        </td>
+        <td>
+            <dx-select-box [disabled]="disabled || occurType !== OccurType.Daily"
+                           [dataSource]="dayGroupOptions"
+                           valueExpr="value"
+                           displayExpr="text"
+                           [(value)]="dayGroupOption"
+                           (onValueChanged)="onParamsChanged()">
+            </dx-select-box>
+        </td>
+        <td>
+            <dx-button class="secondary button width150"
+                       text="Days"
+                       [disabled]="disabled || occurType !== OccurType.Daily "
+                       (click)="showDaysPopup()">
+            </dx-button>
+        </td>
+        <td width="28px" style="padding-left: 0; margin-left: 0">
+            <dx-text-box width="28px"
+                         [focusStateEnabled]="false"
+                         [visible]="showValidation && !isSelectedDaysValid"
+                         [readOnly]="true"
+                         [isValid]="!showValidation || isSelectedDaysValid">
+            </dx-text-box>
+        </td>
+    </tr>
+    <tr>
+      <td class="radio-cell">
+        <input id="recurrent3"
+               class="radio-button"
+               type="radio"
+               name="occurType"
+               [disabled]="disabled"
+               [checked]="occurType === OccurType.Monthly"
+               (change)="setOccurType(OccurType.Monthly)" />
+        <label for="recurrent3" class="input-label">Monthly every</label>
+      </td>
+        <td>
+            <dx-date-box width="100%"
+                         type="time"
+                         [disabled]="disabled || occurType !== OccurType.Monthly"
+                         [(value)]="dayOfMonthTime"
+                         [isValid]="!showValidation || isDayOfMonthTimeValid"
+                         (onValueChanged)="onParamsChanged()">
+            </dx-date-box>
+        </td>
+        <td>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="padding: 0; width: 60%">
+                        <dx-select-box [disabled]="disabled || occurType !== OccurType.Monthly"
+                                       [dataSource]="dayOfMonthGroupOptions"
+                                       valueExpr="value"
+                                       displayExpr="text"
+                                       [(value)]="dayOfMonthGroupOption"
+                                       (onValueChanged)="onParamsChanged()">
+                        </dx-select-box>
+                    </td>
+                    <td style="padding-top: 0; padding-bottom: 0; padding-right: 0; width: 60%">
+                        <dx-select-box [disabled]="disabled || occurType !== OccurType.Monthly || dayOfMonthGroupOption !== ScheduleDayOfMonthGroupOption.ThisDay"
+                                       [dataSource]="dayNumbers"
+                                       valueExpr="id"
+                                       displayExpr="text"
+                                       [(value)]="dayOfMonthOption"
+                                       (onValueChanged)="onParamsChanged()">
+                        </dx-select-box>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <dx-button
+                       class="secondary button width150"
+                       text="Months"
+                       [disabled]="disabled || occurType !== OccurType.Monthly"
+                       (click)="showMonthsPopup()">
+            </dx-button>
+        </td>
+        <td width="28px" style="padding-left: 0; margin-left: 0">
+            <dx-text-box width="28px"
+                         [focusStateEnabled]="false"
+                         [visible]="showValidation && !isSelectedMonthsValid"
+                         [readOnly]="true"
+                         [isValid]="!showValidation || isSelectedMonthsValid">
+            </dx-text-box>
+        </td>
+    </tr>
+</table>
+
+<select-days-dialog [(popupVisible)]="selectDaysOfWeekPopupVisible"
+                    [(selectedDays)]="selectedDays"
+                    (selectedDaysChange)="onParamsChanged()">
+</select-days-dialog>
+
+<select-months-dialog [(popupVisible)]="selectMonthsPopupVisible"
+                      [(selectedMonths)]="selectedMonths"
+                      (selectedMonthsChange)="onParamsChanged()">
+</select-months-dialog>
+
+<select-daily-intervals-dialog [(popupVisible)]="selectDailyIntervalsPopupVisible"
+                               [(dailyIntervals)]="timeIntervalDays"
+                               (dailyIntervalsChange)="onParamsChanged()">
+
+</select-daily-intervals-dialog>

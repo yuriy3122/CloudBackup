@@ -1,0 +1,281 @@
+@import url('constants.scss');
+
+/* CR: Should we keep all other fonts inf assets folder? Maybe we should move these files to "fonts" subfolder? */
+@font-face {
+  font-family: SourceSansPro;
+  src: url('../../assets/fonts/SourceSansPro-Regular.ttf'), url('../../assets/fonts/SourceSansPro-Regular.woff'), url('../../assets/fonts/SourceSansPro-Regular.eot') format('embedded-opentype');
+}
+@font-face {
+  font-family: SourceSansPro-Bold;
+  src: url('../../assets/fonts/SourceSansPro-Bold.ttf'), url('../../assets/fonts/SourceSansPro-Bold.ttf'), url('../../assets/fonts/SourceSansPro-Bold.ttf') format('embedded-opentype');
+}
+
+
+/*
+
+@font-face {
+  font-family: SourceSansPro-SemiBold;
+  src: url('../Content/fonts/OpenSans-SemiBold.ttf'), url('../Content/fonts/OpenSans-SemiBold.woff'), url('../Content/fonts/OpenSans-SemiBold.eot') format('embedded-opentype');
+}
+
+@font-face {
+  font-family: SourceSansPro-Light;
+  src: url('../Content/fonts/OpenSans-Light.ttf'), url('../Content/fonts/OpenSans-Light.woff'), url('../Content/fonts/OpenSans-Light.eot') format('embedded-opentype');
+}
+*/
+
+* {
+  box-sizing: border-box;
+  font-family: SourceSansPro;
+}
+
+html,
+body {
+    min-height: 100%;
+    height: 100%;
+    font-size: 15px;
+}
+
+body {
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-width: 1024px;
+    color: var(--text-primary);
+    background: var(--white);
+}
+
+h1,
+h2 {
+    color: var(--text-primary);
+}
+
+h3,
+h4,
+h5 {
+    margin-top: 10px;
+}
+
+h3 {
+    font-size: 30px;
+}
+
+a {
+    text-decoration: none;
+    font-size: 15px;
+}
+
+/* -- Dashboard style overload -- */
+.container {
+    width: 100%;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 100%;
+    }
+}
+
+.container {
+    width: 100%;
+}
+
+.height100 {
+    height: 100%;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: var(--link-primary);
+}
+
+/* override some strange styles for grid */
+.row,
+.col {
+    margin: 0;
+    padding: 0;
+}
+
+.hide {
+    display: none!important;
+}
+
+.center {
+    text-align: center;
+}
+
+.flex,
+.display-flex {
+    display: flex;
+}
+
+
+.flex-space-between {
+    justify-content: space-between;
+}
+
+.flex-items-center {
+    align-items: center;
+}
+
+
+.block {
+    display: block
+}
+
+.inline-block {
+    display: inline-block
+}
+
+.stretch {
+    width: 100%;
+    height: 100%;
+}
+
+.stretch-width {
+    width: 100%;
+}
+
+.stretch-height {
+    height: 100%;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.align-middle {
+    vertical-align: middle
+}
+
+.up,
+.align-top {
+    vertical-align: top
+}
+
+.align-bottom {
+    vertical-align: bottom
+}
+
+.radio-button {
+    margin-right: 5px;
+}
+
+.red {
+    color: var(--color-text-danger);
+}
+
+/* margins and paddings*/
+
+.padding-0 {
+    padding: 0 !important;
+}
+
+.padding-5 {
+    padding: 5px !important;
+}
+
+.padding-10 {
+    padding: 10px !important;
+}
+
+.padding-15 {
+    padding: 15px !important;
+}
+
+.padding-top10 {
+    padding-top: 10px !important;
+}
+
+.padding-right0 {
+    padding-right: 0 !important;
+}
+
+.padding-right10 {
+    padding-right: 10px !important;
+}
+
+.padding-right30 {
+    padding-right: 30px !important;
+}
+
+.padding-left10 {
+    padding-left: 10px !important;
+}
+
+.padding-left20 {
+    padding-left: 20px !important;
+}
+
+.padding-left25 {
+    padding-left: 25px !important;
+}
+
+.margin-0 {
+    margin: 0 !important;
+}
+
+.margin-top0 {
+    margin-top: 0 !important;
+}
+
+.margin-top10 {
+    margin-top: 10px !important;
+}
+
+.margin-top20 {
+    margin-top: 20px !important;
+}
+
+.margin-bottom0 {
+    margin-bottom: 0 !important;
+}
+
+.margin-bottom5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-bottom10 {
+    margin-bottom: 10px !important;
+}
+
+.margin-left5 {
+    margin-left: 5px !important;
+}
+
+.margin-left10 {
+    margin-left: 10px !important;
+}
+
+.margin-left15 {
+    margin-left: 15px !important;
+}
+
+.margin-left20 {
+    margin-left: 20px !important;
+}
+
+.margin-left30 {
+    margin-left: 30px !important;
+}
+
+.margin-right5 {
+    margin-right: 5px !important;
+}
+
+.margin-right10 {
+    margin-right: 10px !important;
+}
+
+.margin-right20 {
+    margin-right: 20px !important;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+/* end margins and paddings*/
