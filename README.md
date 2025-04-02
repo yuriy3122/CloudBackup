@@ -6,7 +6,7 @@
 ## Key Features
 
 * Web UI wizard for creating scheduled VM backups.
-* Forwarding notifications on backup statuses to email via custom SMTP services.
+* Sending notifications on backup statuses to email via custom SMTP services.
 * Restore both individual disks and complete configurations of virtual machines in the cloud.
 
 ## Modules
