@@ -13,17 +13,17 @@
 * Common
   - Implementation of basic backup functionality that is used in other modules.
 * Model
-  - Declaration of basic entities in the DDD concept
+  - Declaration of basic entities in the DDD concept.
 * Repository
-  - Implementation of the "Repository" pattern concept - abstraction of access to the data store, simplification of the data quering.
+  - Implementation of the "Repository" pattern concept - data store access abstraction, simplification of the data quering using Entity Framework.
 * Services
   - Implementing common business tasks.
 * JobProcessorApp
-  - Implementing a background process to perform scheduled backups.
+  - Implementing a fault-tolerant, background process to perform scheduled backup tasks.
 * Management
-  - Implementation of backend controllers and web interface for creating backup tasks.
+  - Implementation of backend controllers using ASP.NET Core and modern web interface within DevExreme Angular libs.
 * UnitTests
-   - Implementation of Unit tests using Moq library. 
+   - Implementation of Unit tests using Moq library.
 
 ## How To Use
 
