@@ -1,5 +1,5 @@
 <h1 align="center">CLOUD BACKUP</h1>
-<h4 align="center">CLOUD BACKUP is a software for virtual machines (VM) backup and restoration of VM in a cloud.</h4>
+<h4 align="center">Cloud backup is a software for virtual machines (VM) backup and restoration of VM in a cloud.</h4>
 
 <img src="https://github.com/yuriy3122/CloudBackup/blob/main/ui.jpg" alt="Screenshot">
 
@@ -8,6 +8,22 @@
 * Web UI wizard for creating scheduled VM backups.
 * Forwarding notifications on backup statuses to email via custom SMTP services.
 * Restore both individual disks and complete configurations of virtual machines in the cloud.
+
+## Modules
+* Common
+ - Implementation of basic backup functionality that is used in other modules.
+* Model
+  - Declaration of basic entities in the DDD concept
+* Repository
+  - Implementation of the "Repository" pattern concept - abstraction of access to the data store, simplification of the data quering.
+* Services
+  - Implementing common business tasks.
+* JobProcessorApp
+  - Implementing a background process to perform scheduled backups.
+* Management
+  - Implementation of backend controllers and web interface for creating backup tasks.
+* UnitTests
+   - Implementation of Unit tests using Moq library. 
 
 ## How To Use
 
