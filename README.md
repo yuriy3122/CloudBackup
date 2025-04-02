@@ -11,7 +11,7 @@
 
 ## Modules
 * Common
- - Implementation of basic backup functionality that is used in other modules.
+  - Implementation of basic backup functionality that is used in other modules.
 * Model
   - Declaration of basic entities in the DDD concept
 * Repository
