@@ -1,5 +1,5 @@
 <h1 align="center">CLOUD BACKUP</h1>
-<h4 align="center">Cloud backup is a software for virtual machines (VM) backup and restoration of VM in a cloud.</h4>
+<h4 align="center">Cloud backup is a backup and recovery software for virtual machines running in a cloud.</h4>
 
 <img src="https://github.com/yuriy3122/CloudBackup/blob/main/ui.jpg" alt="Screenshot">
 
