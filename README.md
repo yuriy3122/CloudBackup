@@ -21,7 +21,7 @@
 * JobProcessorApp
   - Implementing a fault-tolerant, background process to perform scheduled backup tasks.
 * Management
-  - Implementation of WebAPI controllers using ASP.NET Core and modern web interface within DevExreme Angular libs.
+  - Implementation of WebAPI controllers using ASP.NET Core and modern web interface within DevExreme Angular.
 * UnitTests
    - Implementation of Unit tests using Moq library.
 
