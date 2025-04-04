@@ -15,7 +15,7 @@
 * Model
   - Declaration of basic entities based on the DDD concept.
 * Repository
-  - Implementation of the "Repository" pattern concept - simplification of the data quering using EF Core framework.
+  - Implementation of the "Repository" pattern concept, data quering using EF Core framework.
 * Services
   - Implementing common business tasks.
 * JobProcessorApp
